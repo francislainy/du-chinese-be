@@ -3,7 +3,6 @@ package com.francislainy.duchinesebe.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.francislainy.duchinesebe.enums.LessonLevel;
 import com.francislainy.duchinesebe.model.Lesson;
 import com.francislainy.duchinesebe.service.impl.LessonServiceImpl;
 import org.junit.jupiter.api.Test;

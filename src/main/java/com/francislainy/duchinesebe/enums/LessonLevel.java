@@ -7,4 +7,6 @@ public enum LessonLevel {
     UPPER_INTERMEDIATE,
     ADVANCED,
     MASTER
+
+    //todo: add test for all lesson types
 }
