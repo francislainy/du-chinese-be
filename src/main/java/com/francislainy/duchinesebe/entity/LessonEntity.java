@@ -28,7 +28,7 @@ public class LessonEntity {
     private String type;
     private String imageUrl;
     private String title;
-//    private String content;
+    private String content;
     private String level;
 
     // map to model
