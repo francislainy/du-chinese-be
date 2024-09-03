@@ -1,0 +1,52 @@
+{
+  "consumer": {
+    "name": "DuConsumer"
+  },
+  "interactions": [
+    {
+      "description": "a request for a list of lessons",
+      "providerState": "a list of lessons",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/lessons"
+      },
+      "response": {
+        "body": [
+          {
+            "date": "2024-12-01",
+            "id": "1",
+            "imageUrl": "avatar.jpg",
+            "level": "advanced",
+            "title": "A fun lesson",
+            "type": "article"
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body": {
+            "match": "type",
+            "min": 1
+          }
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "12.5.2"
+    },
+    "pactRust": {
+      "ffi": "0.4.20",
+      "models": "1.2.0"
+    },
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  },
+  "provider": {
+    "name": "DuProvider"
+  }
+}
