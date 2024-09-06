@@ -22,4 +22,10 @@ public class LessonServiceImpl implements LessonService {
                 .map(LessonEntity::toModel)
                 .toList();
     }
+
+    @Override
+    public Lesson createLesson(Lesson lesson) {
+        LessonEntity lessonEntity = lesson.toEntity();
+        return lessonRepository.save(lessonEntity).toModel();
+    }
 }

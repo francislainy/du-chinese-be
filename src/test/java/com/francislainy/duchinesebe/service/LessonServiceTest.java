@@ -57,4 +57,33 @@ public class LessonServiceTest {
         verify(lessonRepository, times(1)).findAll();
     }
 
+    @Test
+    void shouldCreateLesson() {
+        Lesson lesson = Lesson.builder()
+                .id(randomUUID())
+                .date(LocalDate.now())
+                .type("grammar")
+                .imageUrl("Lesson 1")
+                .title("Lesson 1")
+                .content("Lesson 1")
+                .level("NEWBIE")
+                .build();
+
+        LessonEntity lessonEntity = lesson.toEntity();
+
+        when(lessonRepository.save(lessonEntity)).thenReturn(lessonEntity);
+
+        Lesson createdLesson = lessonService.createLesson(lesson);
+        assertAll(
+                () -> assertEquals(lessonEntity.getId(), createdLesson.getId(), "ID should match"),
+                () -> assertEquals(lessonEntity.getDate(), createdLesson.getDate(), "Date should match"),
+                () -> assertEquals(lessonEntity.getType(), createdLesson.getType(), "Type should match"),
+                () -> assertEquals(lessonEntity.getImageUrl(), createdLesson.getImageUrl(), "Image URL should match"),
+                () -> assertEquals(lessonEntity.getTitle(), createdLesson.getTitle(), "Title should match"),
+                () -> assertEquals(lessonEntity.getContent(), createdLesson.getContent(), "Content should match"),
+                () -> assertEquals(lessonEntity.getLevel(), createdLesson.getLevel(), "Level should match")
+        );
+
+        verify(lessonRepository, times(1)).save(lessonEntity);
+    }
 }

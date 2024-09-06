@@ -7,4 +7,6 @@ import java.util.List;
 public interface LessonService {
 
     List<Lesson> getLessons();
+
+    Lesson createLesson(Lesson lesson);
 }

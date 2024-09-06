@@ -1,5 +1,6 @@
 package com.francislainy.duchinesebe.controller;
 
+import com.francislainy.duchinesebe.model.Lesson;
 import com.francislainy.duchinesebe.service.impl.LessonServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,5 +21,10 @@ public class LessonController {
     @GetMapping
     public ResponseEntity<Object> getLessons() {
         return new ResponseEntity<>(lessonService.getLessons(), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> createLesson(@RequestBody Lesson lesson) {
+        return new ResponseEntity<>(lessonService.createLesson(lesson), HttpStatus.CREATED);
     }
 }

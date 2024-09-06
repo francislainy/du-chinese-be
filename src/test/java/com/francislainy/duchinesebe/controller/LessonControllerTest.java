@@ -18,6 +18,7 @@ import static java.time.LocalDate.now;
 import static java.util.UUID.randomUUID;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,6 +52,29 @@ public class LessonControllerTest {
                 .andExpect(content().string(toJson(lessonList)));
 
         verify(lessonService, times(1)).getLessons();
+    }
+
+    @Test
+    void shouldCreateLesson() throws Exception {
+        Lesson lessonResponse = Lesson.builder()
+                .id(randomUUID())
+                .date(now())
+                .type("grammar")
+                .imageUrl("Lesson 1")
+                .title("Lesson 1")
+                .content("Lesson 1")
+                .level(NEWBIE.toString())
+                .build();
+
+        when(lessonService.createLesson(any(Lesson.class))).thenReturn(lessonResponse);
+
+        mockMvc.perform(post("/api/v1/lessons")
+                .contentType("application/json")
+                .content(toJson(lessonResponse)))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(toJson(lessonResponse)));
+
+        verify(lessonService, times(1)).createLesson(any(Lesson.class));
     }
 
     public static String toJson(Object object) {
