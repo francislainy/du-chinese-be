@@ -20,7 +20,7 @@ public class Lesson {
     private String type;
     private String imageUrl;
     private String title;
-//    private String content;
+    private String content;
     private String level;
 
     // map to entity
@@ -31,7 +31,7 @@ public class Lesson {
                 .type(this.type)
                 .imageUrl(this.imageUrl)
                 .title(this.title)
-//                .content(this.content)
+                .content(this.content)
                 .level(this.level)
                 .build();
     }

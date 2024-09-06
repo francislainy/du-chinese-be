@@ -34,7 +34,7 @@ public class LessonServiceTest {
                 .type("grammar")
                 .imageUrl("Lesson 1")
                 .title("Lesson 1")
-//                .content("Lesson 1")
+                .content("Lesson 1")
                 .level("NEWBIE")
                 .build();
 
@@ -50,7 +50,7 @@ public class LessonServiceTest {
                 () -> assertEquals(lessonEntity.getType(), lessonList.get(0).getType(), "Type should match"),
                 () -> assertEquals(lessonEntity.getImageUrl(), lessonList.get(0).getImageUrl(), "Image URL should match"),
                 () -> assertEquals(lessonEntity.getTitle(), lessonList.get(0).getTitle(), "Title should match"),
-//                () -> assertEquals(lessonEntity.getContent(), lessonList.get(0).getContent(), "Content should match"),
+                () -> assertEquals(lessonEntity.getContent(), lessonList.get(0).getContent(), "Content should match"),
                 () -> assertEquals(lessonEntity.getLevel(), lessonList.get(0).getLevel(), "Level should match")
         );
 

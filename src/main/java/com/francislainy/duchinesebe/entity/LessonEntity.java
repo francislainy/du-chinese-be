@@ -39,7 +39,7 @@ public class LessonEntity {
                 .type(this.type)
                 .imageUrl(this.imageUrl)
                 .title(this.title)
-//                .content(this.content)
+                .content(this.content)
                 .level(this.level)
                 .build();
     }
