@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/lessons")
 @RequiredArgsConstructor
-@CrossOrigin("*") //todo: add test https://spring.io/guides/gs/rest-service-cors - 26/08/2024
 public class LessonController {
 
     private final LessonServiceImpl lessonService;
