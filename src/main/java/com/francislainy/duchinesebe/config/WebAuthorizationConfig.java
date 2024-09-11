@@ -12,7 +12,9 @@ public class WebAuthorizationConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.httpBasic(Customizer.withDefaults());
+        http
+                .cors(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults());
 
         http.authorizeHttpRequests(
                 c -> c
