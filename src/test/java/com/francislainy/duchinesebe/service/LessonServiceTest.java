@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.francislainy.duchinesebe.enums.LessonLevel.NEWBIE;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -35,7 +36,7 @@ public class LessonServiceTest {
                 .imageUrl("Lesson 1")
                 .title("Lesson 1")
                 .content("Lesson 1")
-                .level("NEWBIE")
+                .level(NEWBIE.toString())
                 .build();
 
         List<LessonEntity> lessonEntityList = List.of(lessonEntity);
