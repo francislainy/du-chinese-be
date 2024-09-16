@@ -4,6 +4,7 @@ import com.francislainy.duchinesebe.model.Lesson;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -30,6 +33,9 @@ public class LessonEntity {
     private String title;
     private String content;
     private String level;
+
+    @ManyToMany(mappedBy = "favouritedLessons")
+    private Set<UserEntity> favouritedByUsers = new HashSet<>();
 
     // map to model
     public Lesson toModel() {
