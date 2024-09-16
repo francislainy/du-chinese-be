@@ -57,12 +57,22 @@ public class UserControllerTest {
         UUID lessonId = UUID.randomUUID();
         doNothing().when(userService).favouriteLesson(lessonId);
 
-
 //        todo: check whether path should include the user id - 12/10/2021
 //        mockMvc.perform(post("/api/v1/users/{userId}/favourite/{lessonId}", user.getId(), randomUUID()))
         mockMvc.perform(post("/api/v1/users/favourite/{lessonId}", lessonId))
                 .andExpect(status().isNoContent());
 
         verify(userService, times(1)).favouriteLesson(lessonId);
+    }
+
+    @Test
+    void shouldUnfavouriteALesson() throws Exception {
+        UUID lessonId = UUID.randomUUID();
+        doNothing().when(userService).unfavouriteLesson(lessonId);
+
+        mockMvc.perform(post("/api/v1/users/unfavourite/{lessonId}", lessonId))
+                .andExpect(status().isNoContent());
+
+        verify(userService, times(1)).unfavouriteLesson(lessonId);
     }
 }

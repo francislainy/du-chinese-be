@@ -93,4 +93,27 @@ public class UserServiceTest {
 
         assertDoesNotThrow(() -> userService.favouriteLesson(lessonId));
     }
+
+    @Test
+    void shouldUnfavouriteLesson() {
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn("testUser");
+
+        UUID userId = randomUUID();
+        UUID lessonId = randomUUID();
+        Set<LessonEntity> lessons = new HashSet<>();
+        lessons.add(LessonEntity.builder().id(lessonId).build());
+
+        LessonEntity lessonEntity = LessonEntity.builder().id(lessonId).build();
+        UserEntity userEntity = UserEntity.builder().id(userId).username("anyUsername")
+                .favouritedLessons(lessons)
+                .build();
+
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(userEntity));
+        when(lessonRepository.findById(any(UUID.class))).thenReturn(Optional.of(lessonEntity));
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+
+        assertDoesNotThrow(() -> userService.unfavouriteLesson(lessonId));
+    }
 }

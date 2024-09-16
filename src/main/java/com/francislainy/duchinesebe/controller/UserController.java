@@ -30,4 +30,10 @@ public class UserController {
         userService.favouriteLesson(lessonId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PostMapping("/unfavourite/{lessonId}")
+    public ResponseEntity<Void> unfavouriteLesson(@PathVariable UUID lessonId) {
+        userService.unfavouriteLesson(lessonId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

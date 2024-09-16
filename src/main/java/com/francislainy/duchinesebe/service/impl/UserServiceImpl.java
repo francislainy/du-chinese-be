@@ -41,6 +41,20 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public void unfavouriteLesson(UUID lessonId) {
+        String username = getCurrentUsername();
+        UserEntity userEntity = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        LessonEntity lessonEntity = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+
+        userEntity.getFavouritedLessons().remove(lessonEntity);
+
+        userRepository.save(userEntity);
+    }
+
     private String getCurrentUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {

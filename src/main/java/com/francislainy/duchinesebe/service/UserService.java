@@ -9,4 +9,6 @@ public interface UserService {
     User createUser(User user);
 
     void favouriteLesson(UUID lessonId);
+
+    void unfavouriteLesson(UUID lessonId);
 }
