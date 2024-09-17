@@ -4,6 +4,7 @@ import com.francislainy.duchinesebe.entity.LessonEntity;
 import com.francislainy.duchinesebe.model.Lesson;
 import com.francislainy.duchinesebe.repository.LessonRepository;
 import com.francislainy.duchinesebe.service.impl.LessonServiceImpl;
+import com.francislainy.duchinesebe.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import static com.francislainy.duchinesebe.enums.LessonLevel.NEWBIE;
 import static java.util.UUID.randomUUID;
@@ -25,37 +27,72 @@ public class LessonServiceTest {
     LessonServiceImpl lessonService;
 
     @Mock
+    UserServiceImpl userService;
+
+    @Mock
     LessonRepository lessonRepository;
 
     @Test
-    void shouldGetLessons() {
-        LessonEntity lessonEntity = LessonEntity.builder()
-                .id(randomUUID())
+    void shouldGetLessonsWithFavouritedByCurrentUser() {
+        UUID lessonId1 = randomUUID();
+        UUID lessonId2 = randomUUID();
+
+        LessonEntity lessonEntity1 = LessonEntity.builder()
+                .id(lessonId1)
                 .date(LocalDate.now())
                 .type("grammar")
                 .imageUrl("Lesson 1")
                 .title("Lesson 1")
                 .content("Lesson 1")
                 .level(NEWBIE.toString())
+                .favouritedByCurrentUser(true)
                 .build();
 
-        List<LessonEntity> lessonEntityList = List.of(lessonEntity);
+        LessonEntity lessonEntity2 = LessonEntity.builder()
+                .id(lessonId2)
+                .date(LocalDate.now())
+                .type("grammar")
+                .imageUrl("Lesson 2")
+                .title("Lesson 2")
+                .content("Lesson 2")
+                .level(NEWBIE.toString())
+                .favouritedByCurrentUser(false)
+                .build();
+
+        List<LessonEntity> lessonEntityList = List.of(lessonEntity1, lessonEntity2);
         when(lessonRepository.findAll()).thenReturn(lessonEntityList);
+
+        when(userService.isLessonFavouritedByCurrentUser(lessonEntity1.getId())).thenReturn(true);
+        when(userService.isLessonFavouritedByCurrentUser(lessonEntity2.getId())).thenReturn(false);
 
         List<Lesson> lessonList = lessonService.getLessons();
 
         assertFalse(lessonList.isEmpty(), "Lesson list should not be empty");
+        assertEquals(2, lessonList.size(), "Lesson list should have 2 lessons");
 
+        Lesson lesson1 = lessonList.get(0);
+        Lesson lesson2 = lessonList.get(1);
         assertAll(
-                () -> assertEquals(lessonEntity.getDate(), lessonList.get(0).getDate(), "Date should match"),
-                () -> assertEquals(lessonEntity.getType(), lessonList.get(0).getType(), "Type should match"),
-                () -> assertEquals(lessonEntity.getImageUrl(), lessonList.get(0).getImageUrl(), "Image URL should match"),
-                () -> assertEquals(lessonEntity.getTitle(), lessonList.get(0).getTitle(), "Title should match"),
-                () -> assertEquals(lessonEntity.getContent(), lessonList.get(0).getContent(), "Content should match"),
-                () -> assertEquals(lessonEntity.getLevel(), lessonList.get(0).getLevel(), "Level should match")
-        );
+                () -> assertEquals(lessonEntity1.getDate(), lesson1.getDate(), "Date for lesson 1 should match"),
+                () -> assertEquals(lessonEntity1.getType(), lesson1.getType(), "Type for lesson 1 should match"),
+                () -> assertEquals(lessonEntity1.getImageUrl(), lesson1.getImageUrl(), "Image URL for lesson 1 should match"),
+                () -> assertEquals(lessonEntity1.getTitle(), lesson1.getTitle(), "Title for lesson 1 should match"),
+                () -> assertEquals(lessonEntity1.getContent(), lesson1.getContent(), "Content for lesson 1 should match"),
+                () -> assertEquals(lessonEntity1.getLevel(), lesson1.getLevel(), "Level for lesson 1 should match"),
+                () -> assertEquals(true, lesson1.isFavouritedByCurrentUser(), "Is favourited for lesson 1 should match"),
+
+                () -> assertEquals(lessonEntity2.getDate(), lesson2.getDate(), "Date for lesson 2 should match"),
+                () -> assertEquals(lessonEntity2.getType(), lesson2.getType(), "Type for lesson 2 should match"),
+                () -> assertEquals(lessonEntity2.getImageUrl(), lesson2.getImageUrl(), "Image URL for lesson 2 should match"),
+                () -> assertEquals(lessonEntity2.getTitle(), lesson2.getTitle(), "Title for lesson 2 should match"),
+                () -> assertEquals(lessonEntity2.getContent(), lesson2.getContent(), "Content for lesson 2 should match"),
+                () -> assertEquals(lessonEntity2.getLevel(), lesson2.getLevel(), "Level for lesson 2 should match"),
+                () -> assertEquals(false, lesson2.isFavouritedByCurrentUser(), "Is favourited for lesson 2 should match"));
+
 
         verify(lessonRepository, times(1)).findAll();
+        verify(userService, times(1)).isLessonFavouritedByCurrentUser(lessonEntity1.getId());
+        verify(userService, times(1)).isLessonFavouritedByCurrentUser(lessonEntity2.getId());
     }
 
     @Test

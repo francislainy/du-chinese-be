@@ -55,7 +55,18 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userEntity);
     }
 
-    private String getCurrentUsername() {
+    //todo: add tests for this method - 2024-09-17
+    @Override
+    public boolean isLessonFavouritedByCurrentUser(UUID lessonId) {
+        String username = getCurrentUsername();
+        UserEntity userEntity = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return userEntity.getFavouritedLessons().stream()
+                .anyMatch(lesson -> lesson.getId().equals(lessonId));
+    }
+
+    private String getCurrentUsername() { //todo: move to own service class - 2024-09-17
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             return ((UserDetails) principal).getUsername();

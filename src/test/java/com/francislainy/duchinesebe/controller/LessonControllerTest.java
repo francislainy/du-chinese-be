@@ -44,6 +44,7 @@ public class LessonControllerTest {
                 .title("Lesson 1")
                 .content("Lesson 1")
                 .level(NEWBIE.toString())
+                .favouritedByCurrentUser(true)
                 .build();
 
         List<Lesson> lessonList = List.of(lessonResponse);
@@ -67,6 +68,7 @@ public class LessonControllerTest {
                 .title("Lesson 1")
                 .content("Lesson 1")
                 .level(NEWBIE.toString())
+                .favouritedByCurrentUser(true)
                 .build();
 
         when(lessonService.createLesson(any(Lesson.class))).thenReturn(lessonResponse);

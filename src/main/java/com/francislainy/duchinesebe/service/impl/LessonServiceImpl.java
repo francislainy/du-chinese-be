@@ -8,19 +8,31 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class LessonServiceImpl implements LessonService {
 
     private final LessonRepository lessonRepository;
+    private final UserServiceImpl userService;
 
     @Override
     public List<Lesson> getLessons() {
-        return lessonRepository.findAll()
-                .stream()
-                .map(LessonEntity::toModel)
-                .toList();
+
+        List<LessonEntity> lessons = lessonRepository.findAll();
+        for (LessonEntity lesson : lessons) {
+            boolean isFavourited = userService.isLessonFavouritedByCurrentUser(lesson.getId());
+            lesson.setFavouritedByCurrentUser(isFavourited);
+        }
+        return lessons.stream().map(LessonEntity::toModel).collect(Collectors.toList());
+
+
+
+//        return lessonRepository.findAll()
+//                .stream()
+//                .map(LessonEntity::toModel)
+//                .toList();
     }
 
     @Override

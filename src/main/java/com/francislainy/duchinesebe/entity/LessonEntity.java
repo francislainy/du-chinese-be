@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,6 +35,9 @@ public class LessonEntity {
     private String content;
     private String level;
 
+    @Transient
+    private boolean favouritedByCurrentUser;
+
     @ManyToMany(mappedBy = "favouritedLessons")
     private Set<UserEntity> favouritedByUsers = new HashSet<>();
 
@@ -47,6 +51,7 @@ public class LessonEntity {
                 .title(this.title)
                 .content(this.content)
                 .level(this.level)
+                .favouritedByCurrentUser(this.favouritedByCurrentUser)
                 .build();
     }
 }

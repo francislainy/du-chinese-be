@@ -23,6 +23,8 @@ public class Lesson {
     private String content;
     private String level;
 
+    private boolean favouritedByCurrentUser;
+
     // map to entity
     public LessonEntity toEntity() {
         return LessonEntity.builder()
@@ -33,6 +35,7 @@ public class Lesson {
                 .title(this.title)
                 .content(this.content)
                 .level(this.level)
+                .favouritedByCurrentUser(this.favouritedByCurrentUser)
                 .build();
     }
 }

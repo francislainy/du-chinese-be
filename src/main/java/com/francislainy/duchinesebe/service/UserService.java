@@ -11,4 +11,6 @@ public interface UserService {
     void favouriteLesson(UUID lessonId);
 
     void unfavouriteLesson(UUID lessonId);
+
+    boolean isLessonFavouritedByCurrentUser(UUID lessonId);
 }
