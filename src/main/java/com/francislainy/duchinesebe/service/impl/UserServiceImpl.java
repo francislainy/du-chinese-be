@@ -8,8 +8,6 @@ import com.francislainy.duchinesebe.repository.LessonRepository;
 import com.francislainy.duchinesebe.repository.UserRepository;
 import com.francislainy.duchinesebe.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -52,7 +50,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userEntity);
     }
 
-    //todo: add tests for this method - 2024-09-17
     @Override
     public boolean isLessonFavouritedByCurrentUser(UUID lessonId) {
         UserEntity userEntity = securityService.getCurrentUserEntity();

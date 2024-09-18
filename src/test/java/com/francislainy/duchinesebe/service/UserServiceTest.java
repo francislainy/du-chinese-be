@@ -138,6 +138,24 @@ public class UserServiceTest {
         assertThrows(IllegalArgumentException.class, () -> userService.unfavouriteLesson(lessonId));
     }
 
+    @Test
+    void shouldGetLessonFavouritedByCurrentUser() {
+        authenticateUser();
+
+        boolean isLessonFavouritedByCurrentUser = userService.isLessonFavouritedByCurrentUser(lessonEntity.getId());
+
+        assertEquals(true, isLessonFavouritedByCurrentUser, "Lesson should be favourited by current user");
+    }
+
+    @Test
+    void shouldNotGetLessonNotFavouritedByCurrentUser() {
+        authenticateUser();
+
+        boolean isLessonFavouritedByCurrentUser = userService.isLessonFavouritedByCurrentUser(randomUUID());
+
+        assertEquals(false, isLessonFavouritedByCurrentUser, "Lesson should not be favourited by current user");
+    }
+
     private void authenticateUser() {
         UUID userId = randomUUID();
         UUID lessonId = randomUUID();
