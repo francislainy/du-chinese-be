@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static com.francislainy.duchinesebe.controller.LessonControllerTest.toJson;
+import static com.francislainy.duchinesebe.utils.TestUtils.toJson;
 import static java.util.UUID.randomUUID;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;

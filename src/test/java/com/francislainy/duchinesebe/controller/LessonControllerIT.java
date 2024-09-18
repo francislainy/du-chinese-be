@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 
-import static com.francislainy.duchinesebe.controller.LessonControllerTest.toJson;
+import static com.francislainy.duchinesebe.utils.TestUtils.toJson;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest

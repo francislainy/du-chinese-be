@@ -33,6 +33,7 @@ public class LessonEntity {
     private String imageUrl;
     private String title;
     private String description;
+    private String content;
     private String level;
 
     @Transient
@@ -53,6 +54,7 @@ public class LessonEntity {
                 .imageUrl(this.imageUrl)
                 .title(this.title)
                 .description(this.description)
+                .content(this.content)
                 .level(this.level)
                 .favouritedByCurrentUser(this.favouritedByCurrentUser)
                 .readByCurrentUser(this.readByCurrentUser)

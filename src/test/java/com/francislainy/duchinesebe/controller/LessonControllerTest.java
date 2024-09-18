@@ -1,9 +1,7 @@
 package com.francislainy.duchinesebe.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.francislainy.duchinesebe.model.Lesson;
+import com.francislainy.duchinesebe.model.views.LessonViews;
 import com.francislainy.duchinesebe.service.impl.LessonServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.francislainy.duchinesebe.enums.LessonLevel.NEWBIE;
+import static com.francislainy.duchinesebe.utils.TestUtils.toJson;
 import static java.time.LocalDate.now;
 import static java.util.UUID.randomUUID;
 import static org.mockito.Mockito.any;
@@ -32,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(LessonController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class LessonControllerTest {
-    
+
     @Autowired
     MockMvc mockMvc;
 
@@ -41,43 +40,44 @@ public class LessonControllerTest {
 
     @Test
     void shouldGetListOfLessons() throws Exception {
-        Lesson lessonResponse = getLesson();
+        // Mock a list of lessons without the content field
+        Lesson lessonResponse = getLessonWithoutContent(); // Updated method to exclude content
         List<Lesson> lessonList = List.of(lessonResponse);
 
         when(lessonService.getLessons()).thenReturn(lessonList);
 
         mockMvc.perform(get("/api/v1/lessons"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(toJson(lessonList)));
+                .andExpect(content().string(toJson(lessonList, LessonViews.ListView.class))); // Use ListView for serialization
 
         verify(lessonService, times(1)).getLessons();
     }
 
     @Test
     void shouldCreateLesson() throws Exception {
-        Lesson lessonResponse = getLesson();
+        Lesson lessonResponse = getLessonWithContent();
 
         when(lessonService.createLesson(any(Lesson.class))).thenReturn(lessonResponse);
 
         mockMvc.perform(post("/api/v1/lessons")
-                .contentType("application/json")
-                .content(toJson(lessonResponse)))
+                        .contentType("application/json")
+                        .content(toJson(lessonResponse)))  // No need for @JsonView in this case
                 .andExpect(status().isCreated())
-                .andExpect(content().string(toJson(lessonResponse)));
+                .andExpect(content().string(toJson(lessonResponse, LessonViews.DetailView.class)));
 
         verify(lessonService, times(1)).createLesson(any(Lesson.class));
     }
 
     @Test
-    void shouldGetLesson() throws Exception {
+    void shouldGetLessonById() throws Exception {
         UUID lessonId = randomUUID();
-        Lesson lessonResponse = getLesson();
+        Lesson lessonResponse = getLessonWithContent();  // Detailed view includes content
 
         when(lessonService.getLesson(any(UUID.class))).thenReturn(lessonResponse);
 
         mockMvc.perform(get("/api/v1/lessons/{lessonId}", lessonId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(toJson(lessonResponse)));
+                .andExpect(content().string(toJson(lessonResponse, LessonViews.DetailView.class))); // Use DetailView for serialization
 
         verify(lessonService, times(1)).getLesson(any(UUID.class));
     }
@@ -93,7 +93,8 @@ public class LessonControllerTest {
         verify(lessonService, times(1)).deleteLesson(lessonId);
     }
 
-    private static Lesson getLesson() {
+    // Updated to exclude content
+    private static Lesson getLessonWithoutContent() {
         return Lesson.builder()
                 .id(randomUUID())
                 .date(now())
@@ -103,19 +104,15 @@ public class LessonControllerTest {
                 .description("Lesson 1")
                 .level(NEWBIE.toString())
                 .favouritedByCurrentUser(true)
+                .readByCurrentUser(true)
                 .build();
     }
 
-    //todo: move to utils - 18/09/2024
-    public static String toJson(Object object) {
-        ObjectMapper om = new ObjectMapper();
-        om.registerModule(new JavaTimeModule());
-        om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        try {
-            return om.writeValueAsString(object);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    // Detailed view includes content
+    private static Lesson getLessonWithContent() {
+        Lesson lesson = getLessonWithoutContent();
+        lesson.setContent("Content of Lesson 1");
 
+        return lesson;
+    }
 }

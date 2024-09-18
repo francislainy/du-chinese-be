@@ -1,6 +1,8 @@
 package com.francislainy.duchinesebe.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.francislainy.duchinesebe.model.Lesson;
+import com.francislainy.duchinesebe.model.views.LessonViews;
 import com.francislainy.duchinesebe.service.impl.LessonServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,11 +30,13 @@ public class LessonController {
     }
 
     @GetMapping
+    @JsonView(LessonViews.ListView.class) // Only list view fields will be serialized
     public ResponseEntity<Object> getLessons() {
         return new ResponseEntity<>(lessonService.getLessons(), HttpStatus.OK);
     }
 
     @GetMapping("/{lessonId}")
+    @JsonView(LessonViews.DetailView.class) // Both list and detail view fields will be serialized
     public ResponseEntity<Object> getLesson(@PathVariable UUID lessonId) {
         return new ResponseEntity<>(lessonService.getLesson(lessonId), HttpStatus.OK);
     }
