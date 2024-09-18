@@ -7,9 +7,11 @@ import java.util.UUID;
 
 public interface LessonService {
 
+    Lesson createLesson(Lesson lesson);
+
     List<Lesson> getLessons();
 
-    Lesson createLesson(Lesson lesson);
+    Lesson getLesson(UUID lessonId);
 
     void deleteLesson(UUID lessonId);
 }

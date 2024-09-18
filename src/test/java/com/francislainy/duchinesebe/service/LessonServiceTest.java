@@ -33,6 +33,36 @@ public class LessonServiceTest {
     LessonRepository lessonRepository;
 
     @Test
+    void shouldCreateLesson() {
+        Lesson lesson = Lesson.builder()
+                .id(randomUUID())
+                .date(LocalDate.now())
+                .type("grammar")
+                .imageUrl("Lesson 1")
+                .title("Lesson 1")
+                .description("Lesson 1")
+                .level("NEWBIE")
+                .build();
+
+        LessonEntity lessonEntity = lesson.toEntity();
+
+        when(lessonRepository.save(lessonEntity)).thenReturn(lessonEntity);
+
+        Lesson createdLesson = lessonService.createLesson(lesson);
+        assertAll(
+                () -> assertEquals(lessonEntity.getId(), createdLesson.getId(), "ID should match"),
+                () -> assertEquals(lessonEntity.getDate(), createdLesson.getDate(), "Date should match"),
+                () -> assertEquals(lessonEntity.getType(), createdLesson.getType(), "Type should match"),
+                () -> assertEquals(lessonEntity.getImageUrl(), createdLesson.getImageUrl(), "Image URL should match"),
+                () -> assertEquals(lessonEntity.getTitle(), createdLesson.getTitle(), "Title should match"),
+                () -> assertEquals(lessonEntity.getDescription(), createdLesson.getDescription(), "Content should match"),
+                () -> assertEquals(lessonEntity.getLevel(), createdLesson.getLevel(), "Level should match")
+        );
+
+        verify(lessonRepository, times(1)).save(lessonEntity);
+    }
+
+    @Test
     void shouldGetLessonsWithFavouritedByAndReadByCurrentUser() {
         UUID lessonId1 = randomUUID();
         UUID lessonId2 = randomUUID();
@@ -67,6 +97,9 @@ public class LessonServiceTest {
         when(userService.isLessonFavouritedByCurrentUser(lessonEntity1.getId())).thenReturn(true);
         when(userService.isLessonFavouritedByCurrentUser(lessonEntity2.getId())).thenReturn(false);
 
+        when(userService.isLessonReadByCurrentUser(lessonEntity1.getId())).thenReturn(false);
+        when(userService.isLessonReadByCurrentUser(lessonEntity2.getId())).thenReturn(true);
+
         List<Lesson> lessonList = lessonService.getLessons();
 
         assertFalse(lessonList.isEmpty(), "Lesson list should not be empty");
@@ -95,40 +128,42 @@ public class LessonServiceTest {
 
         );
 
-
         verify(lessonRepository, times(1)).findAll();
         verify(userService, times(1)).isLessonFavouritedByCurrentUser(lessonEntity1.getId());
         verify(userService, times(1)).isLessonFavouritedByCurrentUser(lessonEntity2.getId());
     }
 
     @Test
-    void shouldCreateLesson() {
-        Lesson lesson = Lesson.builder()
-                .id(randomUUID())
+    void shouldGetLesson() {
+        UUID lessonId = randomUUID();
+
+        LessonEntity lessonEntity = LessonEntity.builder()
+                .id(lessonId)
                 .date(LocalDate.now())
                 .type("grammar")
                 .imageUrl("Lesson 1")
                 .title("Lesson 1")
                 .description("Lesson 1")
-                .level("NEWBIE")
+                .level(NEWBIE.toString())
+                .favouritedByCurrentUser(true)
+                .readByCurrentUser(false)
                 .build();
 
-        LessonEntity lessonEntity = lesson.toEntity();
+        when(lessonRepository.findById(lessonId)).thenReturn(java.util.Optional.of(lessonEntity));
 
-        when(lessonRepository.save(lessonEntity)).thenReturn(lessonEntity);
+        Lesson lesson = lessonService.getLesson(lessonId);
 
-        Lesson createdLesson = lessonService.createLesson(lesson);
         assertAll(
-                () -> assertEquals(lessonEntity.getId(), createdLesson.getId(), "ID should match"),
-                () -> assertEquals(lessonEntity.getDate(), createdLesson.getDate(), "Date should match"),
-                () -> assertEquals(lessonEntity.getType(), createdLesson.getType(), "Type should match"),
-                () -> assertEquals(lessonEntity.getImageUrl(), createdLesson.getImageUrl(), "Image URL should match"),
-                () -> assertEquals(lessonEntity.getTitle(), createdLesson.getTitle(), "Title should match"),
-                () -> assertEquals(lessonEntity.getDescription(), createdLesson.getDescription(), "Content should match"),
-                () -> assertEquals(lessonEntity.getLevel(), createdLesson.getLevel(), "Level should match")
+                () -> assertEquals(lessonEntity.getId(), lesson.getId(), "ID should match"),
+                () -> assertEquals(lessonEntity.getDate(), lesson.getDate(), "Date should match"),
+                () -> assertEquals(lessonEntity.getType(), lesson.getType(), "Type should match"),
+                () -> assertEquals(lessonEntity.getImageUrl(), lesson.getImageUrl(), "Image URL should match"),
+                () -> assertEquals(lessonEntity.getTitle(), lesson.getTitle(), "Title should match"),
+                () -> assertEquals(lessonEntity.getDescription(), lesson.getDescription(), "Content should match"),
+                () -> assertEquals(lessonEntity.getLevel(), lesson.getLevel(), "Level should match")
         );
 
-        verify(lessonRepository, times(1)).save(lessonEntity);
+        verify(lessonRepository, times(1)).findById(lessonId);
     }
 
     @Test

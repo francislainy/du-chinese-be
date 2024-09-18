@@ -58,6 +58,14 @@ public class UserServiceImpl implements UserService {
                 .anyMatch(lesson -> lesson.getId().equals(lessonId));
     }
 
+    @Override //todo: add test - 18/09/2024
+    public boolean isLessonReadByCurrentUser(UUID lessonId) {
+        UserEntity userEntity = securityService.getCurrentUserEntity();
+
+        return userEntity.getReadLessons().stream()
+                .anyMatch(lesson -> lesson.getId().equals(lessonId));
+    }
+
     @Override
     public void readLesson(UUID lessonId) {
         UserEntity userEntity = securityService.getCurrentUserEntity();

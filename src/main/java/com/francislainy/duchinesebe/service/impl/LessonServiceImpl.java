@@ -19,18 +19,31 @@ public class LessonServiceImpl implements LessonService {
     private final UserServiceImpl userService;
 
     @Override
+    public Lesson createLesson(Lesson lesson) {
+        LessonEntity lessonEntity = lesson.toEntity();
+        return lessonRepository.save(lessonEntity).toModel();
+    }
+
+    @Override
     public List<Lesson> getLessons() {
         return lessonRepository.findAll().stream()
-                .peek(lesson -> lesson.setFavouritedByCurrentUser(
-                        userService.isLessonFavouritedByCurrentUser(lesson.getId())))
+                .peek(lesson -> {
+                    lesson.setFavouritedByCurrentUser(userService.isLessonFavouritedByCurrentUser(lesson.getId()));
+                    lesson.setReadByCurrentUser(userService.isLessonReadByCurrentUser(lesson.getId()));
+                })
                 .map(LessonEntity::toModel)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Lesson createLesson(Lesson lesson) {
-        LessonEntity lessonEntity = lesson.toEntity();
-        return lessonRepository.save(lessonEntity).toModel();
+    public Lesson getLesson(UUID lessonId) {
+        return lessonRepository.findById(lessonId)
+                .map(lesson -> {
+                    lesson.setFavouritedByCurrentUser(userService.isLessonFavouritedByCurrentUser(lesson.getId()));
+                    lesson.setReadByCurrentUser(userService.isLessonReadByCurrentUser(lesson.getId()));
+                    return lesson.toModel();
+                })
+                .orElseThrow(() -> new RuntimeException("Lesson not found"));
     }
 
     @Override

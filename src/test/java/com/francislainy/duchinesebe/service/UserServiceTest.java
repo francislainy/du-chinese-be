@@ -159,6 +159,15 @@ public class UserServiceTest {
     }
 
     @Test
+    void shouldGetLessonReadByCurrentUser() {
+        authenticateUser();
+
+        boolean isLessonReadByCurrentUser = userService.isLessonReadByCurrentUser(lessonEntity.getId());
+
+        assertEquals(true, isLessonReadByCurrentUser, "Lesson should be read by current user");
+    }
+
+    @Test
     void shouldNotGetLessonNotFavouritedByCurrentUser() {
         authenticateUser();
 

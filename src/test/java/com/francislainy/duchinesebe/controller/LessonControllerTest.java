@@ -41,17 +41,7 @@ public class LessonControllerTest {
 
     @Test
     void shouldGetListOfLessons() throws Exception {
-        Lesson lessonResponse = Lesson.builder()
-                .id(randomUUID())
-                .date(now())
-                .type("grammar")
-                .imageUrl("Lesson 1")
-                .title("Lesson 1")
-                .description("Lesson 1")
-                .level(NEWBIE.toString())
-                .favouritedByCurrentUser(true)
-                .build();
-
+        Lesson lessonResponse = getLesson();
         List<Lesson> lessonList = List.of(lessonResponse);
 
         when(lessonService.getLessons()).thenReturn(lessonList);
@@ -65,16 +55,7 @@ public class LessonControllerTest {
 
     @Test
     void shouldCreateLesson() throws Exception {
-        Lesson lessonResponse = Lesson.builder()
-                .id(randomUUID())
-                .date(now())
-                .type("grammar")
-                .imageUrl("Lesson 1")
-                .title("Lesson 1")
-                .description("Lesson 1")
-                .level(NEWBIE.toString())
-                .favouritedByCurrentUser(true)
-                .build();
+        Lesson lessonResponse = getLesson();
 
         when(lessonService.createLesson(any(Lesson.class))).thenReturn(lessonResponse);
 
@@ -88,6 +69,20 @@ public class LessonControllerTest {
     }
 
     @Test
+    void shouldGetLesson() throws Exception {
+        UUID lessonId = randomUUID();
+        Lesson lessonResponse = getLesson();
+
+        when(lessonService.getLesson(any(UUID.class))).thenReturn(lessonResponse);
+
+        mockMvc.perform(get("/api/v1/lessons/{lessonId}", lessonId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(lessonResponse)));
+
+        verify(lessonService, times(1)).getLesson(any(UUID.class));
+    }
+
+    @Test
     void shouldDeleteLesson() throws Exception {
         UUID lessonId = randomUUID();
         doNothing().when(lessonService).deleteLesson(lessonId);
@@ -96,6 +91,19 @@ public class LessonControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(lessonService, times(1)).deleteLesson(lessonId);
+    }
+
+    private static Lesson getLesson() {
+        return Lesson.builder()
+                .id(randomUUID())
+                .date(now())
+                .type("grammar")
+                .imageUrl("Lesson 1")
+                .title("Lesson 1")
+                .description("Lesson 1")
+                .level(NEWBIE.toString())
+                .favouritedByCurrentUser(true)
+                .build();
     }
 
     //todo: move to utils - 18/09/2024

@@ -22,14 +22,19 @@ public class LessonController {
 
     private final LessonServiceImpl lessonService;
 
+    @PostMapping
+    public ResponseEntity<Object> createLesson(@RequestBody Lesson lesson) {
+        return new ResponseEntity<>(lessonService.createLesson(lesson), HttpStatus.CREATED);
+    }
+
     @GetMapping
     public ResponseEntity<Object> getLessons() {
         return new ResponseEntity<>(lessonService.getLessons(), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Object> createLesson(@RequestBody Lesson lesson) {
-        return new ResponseEntity<>(lessonService.createLesson(lesson), HttpStatus.CREATED);
+    @GetMapping("/{lessonId}")
+    public ResponseEntity<Object> getLesson(@PathVariable UUID lessonId) {
+        return new ResponseEntity<>(lessonService.getLesson(lessonId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{lessonId}")
