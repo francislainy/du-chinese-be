@@ -1,4 +1,4 @@
-package com.francislainy.duchinesebe.config;
+package com.francislainy.duchinesebe.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

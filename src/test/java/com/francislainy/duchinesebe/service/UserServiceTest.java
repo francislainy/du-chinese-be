@@ -1,5 +1,6 @@
 package com.francislainy.duchinesebe.service;
 
+import com.francislainy.duchinesebe.config.security.SecurityService;
 import com.francislainy.duchinesebe.entity.LessonEntity;
 import com.francislainy.duchinesebe.entity.UserEntity;
 import com.francislainy.duchinesebe.model.User;
@@ -11,9 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -27,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -43,10 +42,10 @@ public class UserServiceTest {
     LessonRepository lessonRepository;
 
     @Mock
-    private SecurityContext securityContext;
+    SecurityService securityService;
 
-    @Mock
-    private Authentication authentication;
+    private UserEntity userEntity;
+    private LessonEntity lessonEntity;
 
 
     //todo: add more tests (negative tests) and exception handling (on controller side) - 2024-09-12
@@ -78,23 +77,11 @@ public class UserServiceTest {
     void shouldFavouriteLesson() {
         authenticateUser();
 
-        UUID userId = randomUUID();
-        UUID lessonId = randomUUID();
-        Set<LessonEntity> lessons = new HashSet<>();
-        lessons.add(LessonEntity.builder().id(lessonId).build());
-
-        LessonEntity lessonEntity = LessonEntity.builder().id(lessonId).build();
-        UserEntity userEntity = UserEntity.builder().id(userId).username("anyUsername")
-                .favouritedLessons(lessons)
-                .build();
-
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(userEntity));
         when(lessonRepository.findById(any(UUID.class))).thenReturn(Optional.of(lessonEntity));
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
-        assertDoesNotThrow(() -> userService.favouriteLesson(lessonId));
+        assertDoesNotThrow(() -> userService.favouriteLesson(lessonEntity.getId()));
 
-        verify(userRepository).findByUsername(any(String.class));
         verify(lessonRepository).findById(any(UUID.class));
         verify(userRepository).save(any(UserEntity.class));
     }
@@ -103,58 +90,31 @@ public class UserServiceTest {
     void shouldNotFavouriteLessonWhenLessonNotFound() {
         authenticateUser();
 
-        UUID userId = randomUUID();
-        UUID lessonId = randomUUID();
-        Set<LessonEntity> lessons = new HashSet<>();
-        lessons.add(LessonEntity.builder().id(lessonId).build());
-
-        UserEntity userEntity = UserEntity.builder().id(userId).username("anyUsername")
-                .favouritedLessons(lessons)
-                .build();
-
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(userEntity));
         when(lessonRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> userService.favouriteLesson(lessonId));
+        assertThrows(IllegalArgumentException.class, () -> userService.favouriteLesson(randomUUID()));
 
-        verify(userRepository).findByUsername(any(String.class));
         verify(lessonRepository).findById(any(UUID.class));
+        verify(userRepository, never()).save(any(UserEntity.class));
     }
 
     @Test
     void shouldNotFavouriteLessonWhenUserNotFound() {
-        authenticateUser();
-
         UUID lessonId = randomUUID();
-
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
-
         assertThrows(IllegalArgumentException.class, () -> userService.favouriteLesson(lessonId));
 
-        verify(userRepository).findByUsername(any(String.class));
+        verify(userRepository, never()).save(any(UserEntity.class));
     }
 
     @Test
     void shouldUnfavouriteLesson() {
         authenticateUser();
 
-        UUID userId = randomUUID();
-        UUID lessonId = randomUUID();
-        Set<LessonEntity> lessons = new HashSet<>();
-        lessons.add(LessonEntity.builder().id(lessonId).build());
-
-        LessonEntity lessonEntity = LessonEntity.builder().id(lessonId).build();
-        UserEntity userEntity = UserEntity.builder().id(userId).username("anyUsername")
-                .favouritedLessons(lessons)
-                .build();
-
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(userEntity));
         when(lessonRepository.findById(any(UUID.class))).thenReturn(Optional.of(lessonEntity));
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
-        assertDoesNotThrow(() -> userService.unfavouriteLesson(lessonId));
+        assertDoesNotThrow(() -> userService.unfavouriteLesson(lessonEntity.getId()));
 
-        verify(userRepository).findByUsername(any(String.class));
         verify(lessonRepository).findById(any(UUID.class));
         verify(userRepository).save(any(UserEntity.class));
     }
@@ -163,42 +123,32 @@ public class UserServiceTest {
     void shouldNotUnfavouriteLessonWhenLessonNotFound() {
         authenticateUser();
 
-        UUID userId = randomUUID();
-        UUID lessonId = randomUUID();
-        Set<LessonEntity> lessons = new HashSet<>();
-        lessons.add(LessonEntity.builder().id(lessonId).build());
-
-        UserEntity userEntity = UserEntity.builder().id(userId).username("anyUsername")
-                .favouritedLessons(lessons)
-                .build();
-
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(userEntity));
         when(lessonRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> userService.unfavouriteLesson(lessonId));
+        assertThrows(IllegalArgumentException.class, () -> userService.unfavouriteLesson(randomUUID()));
 
-        verify(userRepository).findByUsername(any(String.class));
         verify(lessonRepository).findById(any(UUID.class));
+        verify(userRepository, never()).save(any(UserEntity.class));
     }
 
+    //todo: what to do when lesson not favourited before it's favourited - 2024-09-17
     @Test
     void shouldNotUnfavouriteLessonWhenUserNotFound() {
-        authenticateUser();
-
         UUID lessonId = randomUUID();
-
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
-
         assertThrows(IllegalArgumentException.class, () -> userService.unfavouriteLesson(lessonId));
-
-        verify(userRepository).findByUsername(any(String.class));
     }
 
     private void authenticateUser() {
-        SecurityContextHolder.setContext(securityContext);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn("testUser");
+        UUID userId = randomUUID();
+        UUID lessonId = randomUUID();
+        lessonEntity = LessonEntity.builder().id(lessonId).build();
+        Set<LessonEntity> lessons = new HashSet<>();
+        lessons.add(lessonEntity);
+
+        userEntity = UserEntity.builder().id(userId).username("anyUsername")
+                .favouritedLessons(lessons)
+                .build();
+        when(securityService.getCurrentUserEntity()).thenReturn(userEntity);
     }
 
-    //todo: what to do when lesson not favourited - 2024-09-17
 }

@@ -1,4 +1,4 @@
-package com.francislainy.duchinesebe.config;
+package com.francislainy.duchinesebe.config.security;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

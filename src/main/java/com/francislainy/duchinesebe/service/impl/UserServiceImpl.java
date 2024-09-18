@@ -1,5 +1,6 @@
 package com.francislainy.duchinesebe.service.impl;
 
+import com.francislainy.duchinesebe.config.security.SecurityService;
 import com.francislainy.duchinesebe.entity.LessonEntity;
 import com.francislainy.duchinesebe.entity.UserEntity;
 import com.francislainy.duchinesebe.model.User;
@@ -20,6 +21,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final LessonRepository lessonRepository;
 
+    private final SecurityService securityService;
+
     @Override
     public User createUser(User user) {
         return userRepository.save(user.toEntity()).toModel();
@@ -27,9 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void favouriteLesson(UUID lessonId) {
-        String username = getCurrentUsername();
-        UserEntity userEntity = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        UserEntity userEntity = securityService.getCurrentUserEntity();
 
         LessonEntity lessonEntity = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
@@ -37,15 +38,11 @@ public class UserServiceImpl implements UserService {
         userEntity.getFavouritedLessons().add(lessonEntity);
 
         userRepository.save(userEntity);
-
-
     }
 
     @Override
     public void unfavouriteLesson(UUID lessonId) {
-        String username = getCurrentUsername();
-        UserEntity userEntity = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        UserEntity userEntity = securityService.getCurrentUserEntity();
 
         LessonEntity lessonEntity = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
@@ -58,20 +55,9 @@ public class UserServiceImpl implements UserService {
     //todo: add tests for this method - 2024-09-17
     @Override
     public boolean isLessonFavouritedByCurrentUser(UUID lessonId) {
-        String username = getCurrentUsername();
-        UserEntity userEntity = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        UserEntity userEntity = securityService.getCurrentUserEntity();
 
         return userEntity.getFavouritedLessons().stream()
                 .anyMatch(lesson -> lesson.getId().equals(lessonId));
-    }
-
-    private String getCurrentUsername() { //todo: move to own service class - 2024-09-17
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            return ((UserDetails) principal).getUsername();
-        } else {
-            return principal.toString();
-        }
     }
 }

@@ -1,6 +1,6 @@
 insert into users (id, username, password, first_name, last_name, role) values
-('1e7b1d5e-8c1b-4b8e-9b1e-8c1b4b8e9b1e', 'john', 'password1', 'User', 'Test', 'ROLE_USER'),
-('2e7b1d5e-8c1b-4b8e-9b1e-8c1b4b8e9b1e', 'mary', 'password2', 'Admin', 'Test', 'ROLE_ADMIN');
+('1e7b1d5e-8c1b-4b8e-9b1e-8c1b4b8e9b1e', 'mary', 'password2', 'User', 'Test', 'ROLE_USER'),
+('2e7b1d5e-8c1b-4b8e-9b1e-8c1b4b8e9b1e', 'john', 'password1', 'Admin', 'Test', 'ROLE_ADMIN');
 
 
 INSERT INTO lessons (id, date, type, image_url, title, content, level)
