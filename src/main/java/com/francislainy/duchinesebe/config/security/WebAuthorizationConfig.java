@@ -7,11 +7,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static com.francislainy.duchinesebe.enums.UserType.ADMIN;
+
 @Configuration
 public class WebAuthorizationConfig {
-
-    public static final String ADMIN = "ADMIN";
-    public static final String USER = "USER";
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -21,8 +20,8 @@ public class WebAuthorizationConfig {
 
         http.authorizeHttpRequests(
                 c -> c
-                        .requestMatchers(HttpMethod.POST, "/api/v1/lessons").hasRole(ADMIN)
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/lessons/{lessonId}").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/api/v1/lessons").hasRole(String.valueOf(ADMIN))
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/lessons/{lessonId}").hasRole(String.valueOf(ADMIN))
                         .anyRequest().authenticated()
         );
 

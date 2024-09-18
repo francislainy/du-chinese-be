@@ -3,14 +3,13 @@ package com.francislainy.duchinesebe.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.francislainy.duchinesebe.config.TestSecurityConfig;
 import com.francislainy.duchinesebe.model.Lesson;
 import com.francislainy.duchinesebe.service.impl.LessonServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -19,14 +18,19 @@ import java.util.UUID;
 import static com.francislainy.duchinesebe.enums.LessonLevel.NEWBIE;
 import static java.time.LocalDate.now;
 import static java.util.UUID.randomUUID;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(LessonController.class)
-@Import(TestSecurityConfig.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class LessonControllerTest {
     
     @Autowired
@@ -34,7 +38,7 @@ public class LessonControllerTest {
 
     @MockBean
     LessonServiceImpl lessonService;
-    
+
     @Test
     void shouldGetListOfLessons() throws Exception {
         Lesson lessonResponse = Lesson.builder()
@@ -88,12 +92,13 @@ public class LessonControllerTest {
         UUID lessonId = randomUUID();
         doNothing().when(lessonService).deleteLesson(lessonId);
 
-        mockMvc.perform(post("/api/v1/lessons/delete/{lessonId}", lessonId))
+        mockMvc.perform(delete("/api/v1/lessons/{lessonId}", lessonId))
                 .andExpect(status().isNoContent());
 
         verify(lessonService, times(1)).deleteLesson(lessonId);
     }
 
+    //todo: move to utils - 18/09/2024
     public static String toJson(Object object) {
         ObjectMapper om = new ObjectMapper();
         om.registerModule(new JavaTimeModule());

@@ -1,13 +1,12 @@
 package com.francislainy.duchinesebe.controller;
 
-import com.francislainy.duchinesebe.config.TestSecurityConfig;
 import com.francislainy.duchinesebe.model.User;
 import com.francislainy.duchinesebe.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
@@ -24,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-@Import(TestSecurityConfig.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
 
     @Autowired
