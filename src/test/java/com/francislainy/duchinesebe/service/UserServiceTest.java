@@ -82,6 +82,11 @@ public class UserServiceTest {
 
         assertDoesNotThrow(() -> userService.favouriteLesson(lessonEntity.getId()));
 
+        assertAll(
+                () -> assertEquals(1, userEntity.getFavouritedLessons().size(), "Favourited lessons should have 1 lesson"),
+                () -> assertEquals(lessonEntity, userEntity.getFavouritedLessons().iterator().next(), "Favourited lesson should match")
+        );
+
         verify(lessonRepository).findById(any(UUID.class));
         verify(userRepository).save(any(UserEntity.class));
     }
@@ -115,6 +120,10 @@ public class UserServiceTest {
 
         assertDoesNotThrow(() -> userService.unfavouriteLesson(lessonEntity.getId()));
 
+        assertAll(
+                () -> assertEquals(0, userEntity.getFavouritedLessons().size(), "Favourited lessons should have 0 lesson")
+        );
+
         verify(lessonRepository).findById(any(UUID.class));
         verify(userRepository).save(any(UserEntity.class));
     }
@@ -136,6 +145,8 @@ public class UserServiceTest {
     void shouldNotUnfavouriteLessonWhenUserNotFound() {
         UUID lessonId = randomUUID();
         assertThrows(IllegalArgumentException.class, () -> userService.unfavouriteLesson(lessonId));
+
+        verify(userRepository, never()).save(any(UserEntity.class));
     }
 
     @Test
@@ -156,6 +167,81 @@ public class UserServiceTest {
         assertEquals(false, isLessonFavouritedByCurrentUser, "Lesson should not be favourited by current user");
     }
 
+    @Test
+    void shouldReadLesson() {
+        authenticateUser();
+
+        when(lessonRepository.findById(any(UUID.class))).thenReturn(Optional.of(lessonEntity));
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+
+        assertDoesNotThrow(() -> userService.readLesson(lessonEntity.getId()));
+
+        assertAll(
+                () -> assertEquals(1, userEntity.getReadLessons().size(), "Read lessons should have 1 lesson"),
+                () -> assertEquals(lessonEntity, userEntity.getReadLessons().iterator().next(), "Read lesson should match")
+        );
+
+        verify(lessonRepository).findById(any(UUID.class));
+        verify(userRepository).save(any(UserEntity.class));
+    }
+
+    @Test
+    void shouldNotReadLessonWhenLessonNotFound() {
+        authenticateUser();
+
+        when(lessonRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> userService.readLesson(randomUUID()));
+
+        verify(lessonRepository).findById(any(UUID.class));
+        verify(userRepository, never()).save(any(UserEntity.class));
+    }
+
+    @Test
+    void shouldNotReadLessonWhenUserNotFound() {
+        UUID lessonId = randomUUID();
+        assertThrows(IllegalArgumentException.class, () -> userService.readLesson(lessonId));
+
+        verify(userRepository, never()).save(any(UserEntity.class));
+    }
+
+    @Test
+    void shouldUnreadLesson() {
+        authenticateUser();
+
+        when(lessonRepository.findById(any(UUID.class))).thenReturn(Optional.of(lessonEntity));
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+
+        assertDoesNotThrow(() -> userService.unreadLesson(lessonEntity.getId()));
+
+        assertAll(
+                () -> assertEquals(0, userEntity.getReadLessons().size(), "Read lessons should have 0 lesson")
+        );
+
+        verify(lessonRepository).findById(any(UUID.class));
+        verify(userRepository).save(any(UserEntity.class));
+    }
+
+    @Test
+    void shouldNotUnreadLessonWhenLessonNotFound() {
+        authenticateUser();
+
+        when(lessonRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> userService.unreadLesson(randomUUID()));
+
+        verify(lessonRepository).findById(any(UUID.class));
+        verify(userRepository, never()).save(any(UserEntity.class));
+    }
+
+    @Test
+    void shouldNotUnreadLessonWhenUserNotFound() {
+        UUID lessonId = randomUUID();
+        assertThrows(IllegalArgumentException.class, () -> userService.unreadLesson(lessonId));
+
+        verify(userRepository, never()).save(any(UserEntity.class));
+    }
+
     private void authenticateUser() {
         UUID userId = randomUUID();
         UUID lessonId = randomUUID();
@@ -165,6 +251,7 @@ public class UserServiceTest {
 
         userEntity = UserEntity.builder().id(userId).username("anyUsername")
                 .favouritedLessons(lessons)
+                .readLessons(lessons)
                 .build();
         when(securityService.getCurrentUserEntity()).thenReturn(userEntity);
     }

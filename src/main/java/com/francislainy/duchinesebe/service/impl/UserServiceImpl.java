@@ -57,4 +57,28 @@ public class UserServiceImpl implements UserService {
         return userEntity.getFavouritedLessons().stream()
                 .anyMatch(lesson -> lesson.getId().equals(lessonId));
     }
+
+    @Override
+    public void readLesson(UUID lessonId) {
+        UserEntity userEntity = securityService.getCurrentUserEntity();
+
+        LessonEntity lessonEntity = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+
+        userEntity.getReadLessons().add(lessonEntity);
+
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public void unreadLesson(UUID lessonId) {
+        UserEntity userEntity = securityService.getCurrentUserEntity();
+
+        LessonEntity lessonEntity = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+
+        userEntity.getReadLessons().remove(lessonEntity);
+
+        userRepository.save(userEntity);
+    }
 }

@@ -75,4 +75,26 @@ public class UserControllerTest {
 
         verify(userService, times(1)).unfavouriteLesson(lessonId);
     }
+
+    @Test
+    void shouldMarkLessonAsRead() throws Exception {
+        UUID lessonId = UUID.randomUUID();
+        doNothing().when(userService).readLesson(lessonId);
+
+        mockMvc.perform(post("/api/v1/users/read/{lessonId}", lessonId))
+                .andExpect(status().isNoContent());
+
+        verify(userService, times(1)).readLesson(lessonId);
+    }
+
+    @Test
+    void shouldMarkLessonAsUnread() throws Exception {
+        UUID lessonId = UUID.randomUUID();
+        doNothing().when(userService).unreadLesson(lessonId);
+
+        mockMvc.perform(post("/api/v1/users/unread/{lessonId}", lessonId))
+                .andExpect(status().isNoContent());
+
+        verify(userService, times(1)).unreadLesson(lessonId);
+    }
 }

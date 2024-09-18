@@ -36,4 +36,16 @@ public class UserController {
         userService.unfavouriteLesson(lessonId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PostMapping("/read/{lessonId}")
+    public ResponseEntity<Void> readLesson(@PathVariable UUID lessonId) {
+        userService.readLesson(lessonId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/unread/{lessonId}")
+    public ResponseEntity<Void> unreadLesson(@PathVariable UUID lessonId) {
+        userService.unreadLesson(lessonId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
