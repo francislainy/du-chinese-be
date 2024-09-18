@@ -1,6 +1,6 @@
 
 
-insert into lessons (id, date, type, image_url, title, content, level) values
+insert into lessons (id, date, type, image_url, title, description, level) values
 ('1e7b1d5e-8c1b-4b8e-9b1e-8c1b4b8e9b1e', '2023-01-01', 'type1', 'http://example.com/image1.jpg', 'Title 1', 'Content 1', 'Newbie'),
 ('2e7b1d5e-8c1b-4b8e-9b1e-8c1b4b8e9b1e', '2023-02-01', 'type2', 'http://example.com/image2.jpg', 'Title 2', 'Content 2', 'Intermediate'),
 ('3e7b1d5e-8c1b-4b8e-9b1e-8c1b4b8e9b1e', '2023-03-01', 'type3', 'http://example.com/image3.jpg', 'Title 3', 'Content 3', 'Advanced'),

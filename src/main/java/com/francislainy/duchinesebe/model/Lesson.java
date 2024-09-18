@@ -20,7 +20,7 @@ public class Lesson {
     private String type;
     private String imageUrl;
     private String title;
-    private String content;
+    private String description;
     private String level;
 
     private boolean favouritedByCurrentUser;
@@ -35,7 +35,7 @@ public class Lesson {
                 .type(this.type)
                 .imageUrl(this.imageUrl)
                 .title(this.title)
-                .content(this.content)
+                .description(this.description)
                 .level(this.level)
                 .favouritedByCurrentUser(this.favouritedByCurrentUser)
                 .readByCurrentUser(this.readByCurrentUser)

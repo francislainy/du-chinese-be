@@ -47,7 +47,7 @@ public class LessonControllerTest {
                 .type("grammar")
                 .imageUrl("Lesson 1")
                 .title("Lesson 1")
-                .content("Lesson 1")
+                .description("Lesson 1")
                 .level(NEWBIE.toString())
                 .favouritedByCurrentUser(true)
                 .build();
@@ -71,7 +71,7 @@ public class LessonControllerTest {
                 .type("grammar")
                 .imageUrl("Lesson 1")
                 .title("Lesson 1")
-                .content("Lesson 1")
+                .description("Lesson 1")
                 .level(NEWBIE.toString())
                 .favouritedByCurrentUser(true)
                 .build();

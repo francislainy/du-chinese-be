@@ -43,7 +43,7 @@ public class LessonServiceTest {
                 .type("grammar")
                 .imageUrl("Lesson 1")
                 .title("Lesson 1")
-                .content("Lesson 1")
+                .description("Lesson 1")
                 .level(NEWBIE.toString())
                 .favouritedByCurrentUser(true)
                 .readByCurrentUser(false)
@@ -55,7 +55,7 @@ public class LessonServiceTest {
                 .type("grammar")
                 .imageUrl("Lesson 2")
                 .title("Lesson 2")
-                .content("Lesson 2")
+                .description("Lesson 2")
                 .level(NEWBIE.toString())
                 .favouritedByCurrentUser(false)
                 .readByCurrentUser(true)
@@ -79,7 +79,7 @@ public class LessonServiceTest {
                 () -> assertEquals(lessonEntity1.getType(), lesson1.getType(), "Type for lesson 1 should match"),
                 () -> assertEquals(lessonEntity1.getImageUrl(), lesson1.getImageUrl(), "Image URL for lesson 1 should match"),
                 () -> assertEquals(lessonEntity1.getTitle(), lesson1.getTitle(), "Title for lesson 1 should match"),
-                () -> assertEquals(lessonEntity1.getContent(), lesson1.getContent(), "Content for lesson 1 should match"),
+                () -> assertEquals(lessonEntity1.getDescription(), lesson1.getDescription(), "Content for lesson 1 should match"),
                 () -> assertEquals(lessonEntity1.getLevel(), lesson1.getLevel(), "Level for lesson 1 should match"),
                 () -> assertEquals(true, lesson1.isFavouritedByCurrentUser(), "Is favourited for lesson 1 should match"),
                 () -> assertEquals(false, lesson1.isReadByCurrentUser(), "Is read for lesson 1 should match"),
@@ -88,7 +88,7 @@ public class LessonServiceTest {
                 () -> assertEquals(lessonEntity2.getType(), lesson2.getType(), "Type for lesson 2 should match"),
                 () -> assertEquals(lessonEntity2.getImageUrl(), lesson2.getImageUrl(), "Image URL for lesson 2 should match"),
                 () -> assertEquals(lessonEntity2.getTitle(), lesson2.getTitle(), "Title for lesson 2 should match"),
-                () -> assertEquals(lessonEntity2.getContent(), lesson2.getContent(), "Content for lesson 2 should match"),
+                () -> assertEquals(lessonEntity2.getDescription(), lesson2.getDescription(), "Content for lesson 2 should match"),
                 () -> assertEquals(lessonEntity2.getLevel(), lesson2.getLevel(), "Level for lesson 2 should match"),
                 () -> assertEquals(false, lesson2.isFavouritedByCurrentUser(), "Is favourited for lesson 2 should match"),
                 () -> assertEquals(true, lesson2.isReadByCurrentUser(), "Is read for lesson 2 should match")
@@ -109,7 +109,7 @@ public class LessonServiceTest {
                 .type("grammar")
                 .imageUrl("Lesson 1")
                 .title("Lesson 1")
-                .content("Lesson 1")
+                .description("Lesson 1")
                 .level("NEWBIE")
                 .build();
 
@@ -124,7 +124,7 @@ public class LessonServiceTest {
                 () -> assertEquals(lessonEntity.getType(), createdLesson.getType(), "Type should match"),
                 () -> assertEquals(lessonEntity.getImageUrl(), createdLesson.getImageUrl(), "Image URL should match"),
                 () -> assertEquals(lessonEntity.getTitle(), createdLesson.getTitle(), "Title should match"),
-                () -> assertEquals(lessonEntity.getContent(), createdLesson.getContent(), "Content should match"),
+                () -> assertEquals(lessonEntity.getDescription(), createdLesson.getDescription(), "Content should match"),
                 () -> assertEquals(lessonEntity.getLevel(), createdLesson.getLevel(), "Level should match")
         );
 
