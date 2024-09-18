@@ -135,8 +135,11 @@ public class LessonServiceTest {
     void shouldDeleteLesson() {
         UUID lessonId = randomUUID();
 
+        when(lessonRepository.existsById(lessonId)).thenReturn(true);
+
         assertDoesNotThrow(() -> lessonService.deleteLesson(lessonId));
 
+        verify(lessonRepository, times(1)).existsById(lessonId);
         verify(lessonRepository, times(1)).deleteById(lessonId);
     }
 
