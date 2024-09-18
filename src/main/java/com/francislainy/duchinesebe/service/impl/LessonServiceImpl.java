@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,25 +20,25 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public List<Lesson> getLessons() {
-
-        List<LessonEntity> lessons = lessonRepository.findAll();
-        for (LessonEntity lesson : lessons) {
-            boolean isFavourited = userService.isLessonFavouritedByCurrentUser(lesson.getId());
-            lesson.setFavouritedByCurrentUser(isFavourited);
-        }
-        return lessons.stream().map(LessonEntity::toModel).collect(Collectors.toList());
-
-
-
-//        return lessonRepository.findAll()
-//                .stream()
-//                .map(LessonEntity::toModel)
-//                .toList();
+        return lessonRepository.findAll().stream()
+                .peek(lesson -> lesson.setFavouritedByCurrentUser(
+                        userService.isLessonFavouritedByCurrentUser(lesson.getId())))
+                .map(LessonEntity::toModel)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Lesson createLesson(Lesson lesson) {
         LessonEntity lessonEntity = lesson.toEntity();
         return lessonRepository.save(lessonEntity).toModel();
+    }
+
+    @Override
+    public void deleteLesson(UUID lessonId) {
+        if (!lessonRepository.existsById(lessonId)) {
+            throw new RuntimeException("Lesson not found");
+        }
+
+        lessonRepository.deleteById(lessonId);
     }
 }

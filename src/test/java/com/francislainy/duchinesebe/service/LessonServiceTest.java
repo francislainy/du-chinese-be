@@ -33,7 +33,7 @@ public class LessonServiceTest {
     LessonRepository lessonRepository;
 
     @Test
-    void shouldGetLessonsWithFavouritedByCurrentUser() {
+    void shouldGetLessonsWithFavouritedByAndReadByCurrentUser() {
         UUID lessonId1 = randomUUID();
         UUID lessonId2 = randomUUID();
 
@@ -46,6 +46,7 @@ public class LessonServiceTest {
                 .content("Lesson 1")
                 .level(NEWBIE.toString())
                 .favouritedByCurrentUser(true)
+                .readByCurrentUser(false)
                 .build();
 
         LessonEntity lessonEntity2 = LessonEntity.builder()
@@ -57,6 +58,7 @@ public class LessonServiceTest {
                 .content("Lesson 2")
                 .level(NEWBIE.toString())
                 .favouritedByCurrentUser(false)
+                .readByCurrentUser(true)
                 .build();
 
         List<LessonEntity> lessonEntityList = List.of(lessonEntity1, lessonEntity2);
@@ -80,6 +82,7 @@ public class LessonServiceTest {
                 () -> assertEquals(lessonEntity1.getContent(), lesson1.getContent(), "Content for lesson 1 should match"),
                 () -> assertEquals(lessonEntity1.getLevel(), lesson1.getLevel(), "Level for lesson 1 should match"),
                 () -> assertEquals(true, lesson1.isFavouritedByCurrentUser(), "Is favourited for lesson 1 should match"),
+                () -> assertEquals(false, lesson1.isReadByCurrentUser(), "Is read for lesson 1 should match"),
 
                 () -> assertEquals(lessonEntity2.getDate(), lesson2.getDate(), "Date for lesson 2 should match"),
                 () -> assertEquals(lessonEntity2.getType(), lesson2.getType(), "Type for lesson 2 should match"),
@@ -87,7 +90,10 @@ public class LessonServiceTest {
                 () -> assertEquals(lessonEntity2.getTitle(), lesson2.getTitle(), "Title for lesson 2 should match"),
                 () -> assertEquals(lessonEntity2.getContent(), lesson2.getContent(), "Content for lesson 2 should match"),
                 () -> assertEquals(lessonEntity2.getLevel(), lesson2.getLevel(), "Level for lesson 2 should match"),
-                () -> assertEquals(false, lesson2.isFavouritedByCurrentUser(), "Is favourited for lesson 2 should match"));
+                () -> assertEquals(false, lesson2.isFavouritedByCurrentUser(), "Is favourited for lesson 2 should match"),
+                () -> assertEquals(true, lesson2.isReadByCurrentUser(), "Is read for lesson 2 should match")
+
+        );
 
 
         verify(lessonRepository, times(1)).findAll();
@@ -123,5 +129,24 @@ public class LessonServiceTest {
         );
 
         verify(lessonRepository, times(1)).save(lessonEntity);
+    }
+
+    @Test
+    void shouldDeleteLesson() {
+        UUID lessonId = randomUUID();
+
+        assertDoesNotThrow(() -> lessonService.deleteLesson(lessonId));
+
+        verify(lessonRepository, times(1)).deleteById(lessonId);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenLessonDoesNotExist() {
+        UUID lessonId = randomUUID();
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> lessonService.deleteLesson(lessonId));
+        assertEquals("Lesson not found", exception.getMessage());
+
+        verify(lessonRepository, never()).deleteById(lessonId);
     }
 }

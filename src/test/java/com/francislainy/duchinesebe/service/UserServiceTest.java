@@ -255,5 +255,4 @@ public class UserServiceTest {
                 .build();
         when(securityService.getCurrentUserEntity()).thenReturn(userEntity);
     }
-
 }

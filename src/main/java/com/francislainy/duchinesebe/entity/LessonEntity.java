@@ -38,6 +38,9 @@ public class LessonEntity {
     @Transient
     private boolean favouritedByCurrentUser;
 
+    @Transient
+    private boolean readByCurrentUser;
+
     @ManyToMany(mappedBy = "favouritedLessons")
     private Set<UserEntity> favouritedByUsers = new HashSet<>();
 
@@ -52,6 +55,7 @@ public class LessonEntity {
                 .content(this.content)
                 .level(this.level)
                 .favouritedByCurrentUser(this.favouritedByCurrentUser)
+                .readByCurrentUser(this.readByCurrentUser)
                 .build();
     }
 }

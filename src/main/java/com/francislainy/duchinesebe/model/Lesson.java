@@ -24,6 +24,8 @@ public class Lesson {
     private String level;
 
     private boolean favouritedByCurrentUser;
+    private boolean readByCurrentUser;
+
 
     // map to entity
     public LessonEntity toEntity() {
@@ -36,6 +38,7 @@ public class Lesson {
                 .content(this.content)
                 .level(this.level)
                 .favouritedByCurrentUser(this.favouritedByCurrentUser)
+                .readByCurrentUser(this.readByCurrentUser)
                 .build();
     }
 }

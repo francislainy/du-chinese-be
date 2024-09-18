@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.francislainy.duchinesebe.enums.LessonLevel.NEWBIE;
 import static java.time.LocalDate.now;
@@ -80,6 +81,17 @@ public class LessonControllerTest {
                 .andExpect(content().string(toJson(lessonResponse)));
 
         verify(lessonService, times(1)).createLesson(any(Lesson.class));
+    }
+
+    @Test
+    void shouldDeleteLesson() throws Exception {
+        UUID lessonId = randomUUID();
+        doNothing().when(lessonService).deleteLesson(lessonId);
+
+        mockMvc.perform(post("/api/v1/lessons/delete/{lessonId}", lessonId))
+                .andExpect(status().isNoContent());
+
+        verify(lessonService, times(1)).deleteLesson(lessonId);
     }
 
     public static String toJson(Object object) {
