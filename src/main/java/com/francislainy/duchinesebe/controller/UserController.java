@@ -25,6 +25,8 @@ public class UserController {
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
     }
 
+
+    //todo: move to lesson controller - 2024/09/25
     @PostMapping("/favourite/{lessonId}")
     public ResponseEntity<Void> favouriteLesson(@PathVariable UUID lessonId) {
         userService.favouriteLesson(lessonId);
