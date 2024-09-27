@@ -3,6 +3,7 @@ package com.francislainy.duchinesebe.service;
 import com.francislainy.duchinesebe.config.security.SecurityService;
 import com.francislainy.duchinesebe.entity.LessonEntity;
 import com.francislainy.duchinesebe.entity.UserEntity;
+import com.francislainy.duchinesebe.enums.UserType;
 import com.francislainy.duchinesebe.model.User;
 import com.francislainy.duchinesebe.repository.LessonRepository;
 import com.francislainy.duchinesebe.repository.UserRepository;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+//todo: add more tests (negative tests) and exception handling (on controller side) - 2024-09-12
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
@@ -44,30 +46,30 @@ public class UserServiceTest {
     @Mock
     SecurityService securityService;
 
-    private UserEntity userEntity;
-    private LessonEntity lessonEntity;
+    UserEntity userEntity;
+    LessonEntity lessonEntity;
 
-
-    //todo: add more tests (negative tests) and exception handling (on controller side) - 2024-09-12
     @Test
-    void shouldCreateUser() {
+    void shouldRegisterUser() {
         User user = User.builder()
                 .id(randomUUID())
                 .username("user")
                 .password("password")
+                .role(UserType.USER.toString())
                 .build();
 
         UserEntity userEntity = user.toEntity();
 
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
-        User createdUser = userService.createUser(user);
+        User createdUser = userService.registerUser(user);
         assertNotNull(createdUser, "User should not be null");
 
         assertAll(
                 () -> assertEquals(user.getId(), createdUser.getId(), "User ID should match"),
                 () -> assertEquals(user.getUsername(), createdUser.getUsername(), "Username should match"),
-                () -> assertEquals(user.getPassword(), createdUser.getPassword(), "Password should match")
+                () -> assertEquals(user.getPassword(), createdUser.getPassword(), "Password should match"),
+                () -> assertEquals(user.getRole(), createdUser.getRole(), "Role should match")
         );
 
         verify(userRepository).save(any(UserEntity.class));

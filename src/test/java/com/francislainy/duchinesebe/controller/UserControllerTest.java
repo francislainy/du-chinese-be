@@ -40,7 +40,7 @@ public class UserControllerTest {
                 .password("password")
                 .build();
 
-        when(userService.createUser(user)).thenReturn(user);
+        when(userService.registerUser(user)).thenReturn(user);
 
         mockMvc.perform(post("/api/v1/users")
                         .contentType(APPLICATION_JSON)
@@ -48,7 +48,7 @@ public class UserControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string(toJson(user)));
 
-        verify(userService, times(1)).createUser(user);
+        verify(userService, times(1)).registerUser(user);
     }
 
     @Test

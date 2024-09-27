@@ -3,6 +3,7 @@ package com.francislainy.duchinesebe.service.impl;
 import com.francislainy.duchinesebe.config.security.SecurityService;
 import com.francislainy.duchinesebe.entity.LessonEntity;
 import com.francislainy.duchinesebe.entity.UserEntity;
+import com.francislainy.duchinesebe.enums.UserType;
 import com.francislainy.duchinesebe.model.User;
 import com.francislainy.duchinesebe.repository.LessonRepository;
 import com.francislainy.duchinesebe.repository.UserRepository;
@@ -22,8 +23,10 @@ public class UserServiceImpl implements UserService {
     private final SecurityService securityService;
 
     @Override
-    public User createUser(User user) {
-        return userRepository.save(user.toEntity()).toModel();
+    public User registerUser(User user) {
+        UserEntity userEntity = user.toEntity();
+        userEntity.setRole(UserType.USER.toString());
+        return userRepository.save(userEntity).toModel();
     }
 
     @Override
@@ -89,4 +92,6 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(userEntity);
     }
+
+
 }

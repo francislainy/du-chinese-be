@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public interface UserService {
 
-    User createUser(User user);
+    User registerUser(User user);
 
     void favouriteLesson(UUID lessonId);
 

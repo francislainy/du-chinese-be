@@ -17,6 +17,7 @@ public class User {
     private UUID id;
     private String username;
     private String password;
+    private String role;
 
     // map to entity
     public UserEntity toEntity() {
@@ -24,6 +25,7 @@ public class User {
                 .id(this.id)
                 .username(this.username)
                 .password(this.password)
+                .role(this.role)
                 .build();
     }
 }
