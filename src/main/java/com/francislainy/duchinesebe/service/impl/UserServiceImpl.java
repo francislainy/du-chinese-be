@@ -30,6 +30,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User loginUser(User user) {
+        UserEntity userEntity = userRepository.findByUsername(user.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (!userEntity.getPassword().equals(user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+
+        return userEntity.toModel();
+    }
+
+    @Override
     public void favouriteLesson(UUID lessonId) {
         UserEntity userEntity = securityService.getCurrentUserEntity();
 

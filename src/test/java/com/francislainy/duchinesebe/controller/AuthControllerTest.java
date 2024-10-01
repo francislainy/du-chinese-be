@@ -44,4 +44,21 @@ public class AuthControllerTest {
 
         verify(userService).registerUser(user);
     }
+
+    @Test
+    void shouldLoginUser() throws Exception {
+        User user = User.builder()
+                .username("test")
+                .password("test")
+                .build();
+
+        when(userService.loginUser(user)).thenReturn(user);
+
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(user)))
+                .andExpect(status().isOk());
+
+        verify(userService).loginUser(user);
+    }
 }

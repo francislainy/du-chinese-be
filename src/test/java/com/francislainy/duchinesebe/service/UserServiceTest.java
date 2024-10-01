@@ -76,6 +76,77 @@ public class UserServiceTest {
     }
 
     @Test
+    void shouldLoginUser() {
+        String username = "user";
+        String password = "password";
+        UserEntity userEntity = UserEntity.builder()
+                .id(randomUUID())
+                .username(username)
+                .password(password)
+                .role(UserType.USER.toString())
+                .build();
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(userEntity));
+
+        User user = User.builder()
+                .username(username)
+                .password(password)
+                .build();
+
+        User loggedInUser = userService.loginUser(user);
+
+        assertNotNull(loggedInUser, "Logged in user should not be null");
+
+        assertAll(
+                () -> assertEquals(userEntity.getId(), loggedInUser.getId(), "User ID should match"),
+                () -> assertEquals(userEntity.getUsername(), loggedInUser.getUsername(), "Username should match"),
+                () -> assertEquals(userEntity.getPassword(), loggedInUser.getPassword(), "Password should match"),
+                () -> assertEquals(userEntity.getRole(), loggedInUser.getRole(), "Role should match")
+        );
+
+        verify(userRepository).findByUsername(username);
+    }
+
+    @Test
+    void shouldNotLoginUserWhenUserNotFound() {
+        String username = "user";
+        String password = "password";
+        User user = User.builder()
+                .username(username)
+                .password(password)
+                .build();
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> userService.loginUser(user));
+
+        verify(userRepository).findByUsername(username);
+    }
+
+    @Test
+    void shouldNotLoginUserWhenInvalidPassword() {
+        String username = "user";
+        String password = "password";
+        UserEntity userEntity = UserEntity.builder()
+                .id(randomUUID())
+                .username(username)
+                .password("invalidPassword")
+                .role(UserType.USER.toString())
+                .build();
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(userEntity));
+
+        User user = User.builder()
+                .username(username)
+                .password(password)
+                .build();
+
+        assertThrows(IllegalArgumentException.class, () -> userService.loginUser(user));
+
+        verify(userRepository).findByUsername(username);
+    }
+
+    @Test
     void shouldFavouriteLesson() {
         authenticateUser();
 
