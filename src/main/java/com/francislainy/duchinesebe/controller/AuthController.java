@@ -1,7 +1,7 @@
 package com.francislainy.duchinesebe.controller;
 
 import com.francislainy.duchinesebe.model.User;
-import com.francislainy.duchinesebe.service.UserService;
+import com.francislainy.duchinesebe.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +15,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthServiceImpl authService;
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
-        return new ResponseEntity<>(userService.registerUser(user), HttpStatus.CREATED);
+        return new ResponseEntity<>(authService.registerUser(user), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user) {
-        return new ResponseEntity<>(userService.loginUser(user), HttpStatus.OK);
+        return new ResponseEntity<>(authService.loginUser(user), HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        authService.logoutUser();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

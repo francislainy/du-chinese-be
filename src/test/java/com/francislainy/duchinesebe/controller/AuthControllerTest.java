@@ -1,7 +1,7 @@
 package com.francislainy.duchinesebe.controller;
 
 import com.francislainy.duchinesebe.model.User;
-import com.francislainy.duchinesebe.service.impl.UserServiceImpl;
+import com.francislainy.duchinesebe.service.impl.AuthServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.francislainy.duchinesebe.utils.TestUtils.toJson;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,7 +25,7 @@ public class AuthControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    UserServiceImpl userService;
+    AuthServiceImpl authService;
 
     @Test
     void shouldRegisterUser() throws Exception {
@@ -35,14 +36,14 @@ public class AuthControllerTest {
 //                .lastName("test")
                 .build();
 
-        when(userService.registerUser(user)).thenReturn(user);
+        when(authService.registerUser(user)).thenReturn(user);
 
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(user)))
                 .andExpect(status().isCreated());
 
-        verify(userService).registerUser(user);
+        verify(authService).registerUser(user);
     }
 
     @Test
@@ -52,13 +53,21 @@ public class AuthControllerTest {
                 .password("test")
                 .build();
 
-        when(userService.loginUser(user)).thenReturn(user);
+        when(authService.loginUser(user)).thenReturn(user);
 
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(user)))
                 .andExpect(status().isOk());
 
-        verify(userService).loginUser(user);
+        verify(authService).loginUser(user);
+    }
+
+    @Test
+    void shouldLogoutUser() throws Exception {
+        mockMvc.perform(post("/api/v1/auth/logout"))
+                .andExpect(status().isNoContent());
+
+        verify(authService, times(1)).logoutUser();
     }
 }
