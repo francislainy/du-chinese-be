@@ -1,9 +1,11 @@
-<!DOCTYPE HTML>
+<!doctype HTML>
 <html lang="en">
 <head>
-    <title>Home</title>
+    <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link href="../../main/resources/static/main.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../main/resources/static/main.css" />
+    <title>Home</title>
 </head>
 <body class="bg-slate-50">
 <header class="bg-green-500 container mx-auto">
