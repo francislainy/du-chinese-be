@@ -58,17 +58,15 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/gg.jte/jte -->
+        <dependency>
+            <groupId>gg.jte</groupId>
+            <artifactId>jte-spring-boot-starter-3</artifactId>
+            <version>3.1.12</version>
+        </dependency>
         <dependency>
             <groupId>gg.jte</groupId>
             <artifactId>jte</artifactId>
             <version>3.1.12</version>
-        </dependency>
-
-        <dependency>
-            <groupId>gg.jte</groupId>
-            <artifactId>jte-spring-boot-starter-3</artifactId>
-            <version>3.1.1</version>
         </dependency>
 
 
@@ -206,6 +204,12 @@
                                 <goals>
                                     <goal>generate</goal>
                                 </goals>
+                                <configuration>
+                                    <sourceDirectory>${project.basedir}/src/main/jte</sourceDirectory>
+                                    <contentType>Html</contentType>
+                                    <binaryStaticContent>true</binaryStaticContent>
+                                    <targetResourceDirectory>${project.build.outputDirectory}</targetResourceDirectory>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
