@@ -1,11 +1,9 @@
 <!DOCTYPE HTML>
-<html
-        lang="en"
-        xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <title>Home</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link th:href="@{/main.css}" rel="stylesheet" />
+    <link href="../../main/resources/static/main.css" rel="stylesheet" />
 </head>
 <body class="bg-slate-50">
 <header class="bg-green-500 container mx-auto">

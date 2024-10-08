@@ -23,7 +23,8 @@ public class WebAuthorizationConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/lessons").hasRole(String.valueOf(ADMIN))
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/lessons/{lessonId}").hasRole(String.valueOf(ADMIN))
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
         );
 
         http.csrf(
