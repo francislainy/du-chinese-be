@@ -4,6 +4,7 @@ import com.francislainy.duchinesebe.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,11 @@ import java.util.UUID;
 public class UserController {
 
     private final UserServiceImpl userService;
+
+    @GetMapping
+    public ResponseEntity<Object> getUsers() {
+        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    }
 
     //todo: move to lesson controller - 2024/09/25
     @PostMapping("/favourite/{lessonId}")

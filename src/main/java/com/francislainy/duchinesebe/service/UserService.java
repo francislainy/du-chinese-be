@@ -1,5 +1,8 @@
 package com.francislainy.duchinesebe.service;
 
+import com.francislainy.duchinesebe.model.User;
+
+import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
@@ -11,4 +14,6 @@ public interface UserService {
 
     void readLesson(UUID lessonId);
     void unreadLesson(UUID lessonId);
+
+    List<User> getUsers();
 }

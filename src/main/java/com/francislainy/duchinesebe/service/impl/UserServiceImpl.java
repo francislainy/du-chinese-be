@@ -3,12 +3,14 @@ package com.francislainy.duchinesebe.service.impl;
 import com.francislainy.duchinesebe.config.security.SecurityService;
 import com.francislainy.duchinesebe.entity.LessonEntity;
 import com.francislainy.duchinesebe.entity.UserEntity;
+import com.francislainy.duchinesebe.model.User;
 import com.francislainy.duchinesebe.repository.LessonRepository;
 import com.francislainy.duchinesebe.repository.UserRepository;
 import com.francislainy.duchinesebe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -82,5 +84,10 @@ public class UserServiceImpl implements UserService {
         userEntity.getReadLessons().remove(lessonEntity);
 
         userRepository.save(userEntity);
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAll().stream().map(UserEntity::toModel).toList();
     }
 }
