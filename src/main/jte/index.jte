@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
     <link rel="stylesheet" href="/main.css" />
     <script src="http://localhost:35729/livereload.js"></script>
-    <title>Home</title>
 </head>
 <body class="bg-slate-50">
 <header class="bg-red-500 container mx-auto">
