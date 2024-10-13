@@ -48,7 +48,14 @@
         });
 
         if (response.ok) {
-            window.location.href = '/admin';
+            const user = await response.json();
+
+            console.log(user);
+            if (user.role === 'ROLE_ADMIN') {
+                window.location.href = '/admin';
+            } else {
+                alert('Access denied: Admins only');
+            }
         } else {
             alert('Login failed');
         }
