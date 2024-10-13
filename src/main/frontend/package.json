@@ -1,18 +1,17 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "description": "Spring Boot + Tailwind CSS Custom Login Form",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "build": "tailwindcss -i ./styles.css -o ../resources/static/main.css",
-    "watch": "tailwindcss --watch -i ./styles.css -o ../resources/static/main.css"
+    "build": "tailwindcss -i ./styles.css -o ../resources/static/main.css --minify",
+    "watch": "tailwindcss -i ./styles.css -o ../resources/static/main.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Dan Vega",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "private": true,
   "devDependencies": {
-    "tailwindcss": "^3.4.4"
-  },
-  "dependencies": {
-    "@tailwindcss/forms": "^0.5.7"
+    "tailwindcss": "^3.4.13"
   }
 }

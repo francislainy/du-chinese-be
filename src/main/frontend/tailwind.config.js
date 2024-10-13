@@ -1,11 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-      './src/main/jte/**/*.jte',
-      './src/main/resources/static/**/*.css',
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
+    content: [
+        '../jte/**/*.jte', // Ensure Tailwind scans your JTE files
+        './src/main/resources/static/**/*.css', // Optionally include other static resources if needed
+    ],
+    theme: {
+        extend: {},
+    },
+    plugins: [],
 }
