@@ -3,6 +3,8 @@ package com.francislainy.duchinesebe.service;
 import com.francislainy.duchinesebe.config.security.SecurityService;
 import com.francislainy.duchinesebe.entity.LessonEntity;
 import com.francislainy.duchinesebe.entity.UserEntity;
+import com.francislainy.duchinesebe.enums.UserType;
+import com.francislainy.duchinesebe.model.User;
 import com.francislainy.duchinesebe.repository.LessonRepository;
 import com.francislainy.duchinesebe.repository.UserRepository;
 import com.francislainy.duchinesebe.service.impl.UserServiceImpl;
@@ -13,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -45,6 +48,41 @@ public class UserServiceTest {
 
     UserEntity userEntity;
     LessonEntity lessonEntity;
+
+    @Test
+    void shouldGetEmptyListOfUsersWhenNoUsers() {
+        when(userRepository.findAll()).thenReturn(List.of());
+
+        List<User> actualUsers = userService.getUsers();
+
+        assertEquals(0, actualUsers.size(), "Users list should have 0 users");
+
+        verify(userRepository).findAll();
+    }
+
+    @Test
+    void shouldGetUsers() {
+        UserEntity userEntity1 = UserEntity.builder().id(randomUUID()).username("anyUsername").role(UserType.USER.toString()).build();
+        UserEntity userEntity2 = UserEntity.builder().id(randomUUID()).username("anyOtherUsername").role(UserType.ADMIN.toString()).build();
+        List<UserEntity> users = List.of(userEntity1, userEntity2);
+
+        when(userRepository.findAll()).thenReturn(users);
+
+        List<User> actualUsers = userService.getUsers();
+
+        assertEquals(2, actualUsers.size(), "Users should have 2 users");
+
+        assertAll(
+                () -> assertEquals(userEntity1.getId(), actualUsers.get(0).getId(), "User id should match for user 1"),
+                () -> assertEquals(userEntity1.getUsername(), actualUsers.get(0).getUsername(), "User username should match for user 1"),
+                () -> assertEquals(userEntity1.getRole(), actualUsers.get(0).getRole(), "User role should match for user 1"),
+                () -> assertEquals(userEntity2.getId(), actualUsers.get(1).getId(), "User id should match for user 2"),
+                () -> assertEquals(userEntity2.getUsername(), actualUsers.get(1).getUsername(), "User username should match for user 2"),
+                () -> assertEquals(userEntity2.getRole(), actualUsers.get(1).getRole(), "User role should match for user 2")
+        );
+
+        verify(userRepository).findAll();
+    }
 
     @Test
     void shouldFavouriteLesson() {

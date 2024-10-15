@@ -16,6 +16,7 @@ public class User {
 
     private UUID id;
     private String username;
+    //todo: add unit test and make sure this is not returned as part of the model response - 15/10/2024
     private String password;
     private String role;
 

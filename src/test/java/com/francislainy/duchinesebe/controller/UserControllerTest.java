@@ -1,5 +1,6 @@
 package com.francislainy.duchinesebe.controller;
 
+import com.francislainy.duchinesebe.model.User;
 import com.francislainy.duchinesebe.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.UUID;
 
+import static com.francislainy.duchinesebe.utils.TestUtils.toJson;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
@@ -25,6 +31,21 @@ public class UserControllerTest {
 
     @MockBean
     UserServiceImpl userService;
+
+    @Test
+    void getUsers() throws Exception {
+        User user1 = User.builder().id(UUID.randomUUID()).build();
+        User user2 = User.builder().id(UUID.randomUUID()).build();
+        List<User> users = List.of(user1, user2);
+
+        when(userService.getUsers()).thenReturn(users);
+
+        mockMvc.perform(get("/api/v1/users"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(users)));
+
+        verify(userService, times(1)).getUsers();
+    }
 
     @Test
     void shouldFavouriteALesson() throws Exception {

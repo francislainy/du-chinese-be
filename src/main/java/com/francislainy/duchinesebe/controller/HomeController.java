@@ -21,6 +21,7 @@ public class HomeController {
         return "login";
     }
 
+    //todo: add unit test - 13/10/2024
     @GetMapping({"admin", "admin/"})
     public String getAdminDashboard(Model model) {
         List<User> users = userService.getUsers();

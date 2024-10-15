@@ -36,7 +36,7 @@ public class LessonController {
     }
 
     @GetMapping("/{lessonId}")
-    @JsonView(LessonViews.DetailView.class) // Both list and detail view fields will be serialized
+    @JsonView(LessonViews.DetailView.class) // Both list and detail view fields will be serialized.0
     public ResponseEntity<Object> getLesson(@PathVariable UUID lessonId) {
         return new ResponseEntity<>(lessonService.getLesson(lessonId), HttpStatus.OK);
     }
