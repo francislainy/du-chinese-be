@@ -18,7 +18,7 @@ public class HomeController {
 
     @GetMapping({ "", "/"})
     public String login(Model model) {
-        return "login";
+        return "loginPage";
     }
 
     //todo: add unit test - 13/10/2024
@@ -26,6 +26,6 @@ public class HomeController {
     public String getAdminDashboard(Model model) {
         List<User> users = userService.getUsers();
         model.addAttribute("users", users);
-        return "admin";
+        return "adminPage";
     }
 }
