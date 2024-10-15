@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -21,7 +20,6 @@ public class HomeController {
         return "loginPage";
     }
 
-    //todo: add unit test - 13/10/2024
     @GetMapping({"admin", "admin/"})
     public String getAdminDashboard(Model model) {
         List<User> users = userService.getUsers();
