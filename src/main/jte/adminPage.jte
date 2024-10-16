@@ -6,10 +6,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/main.css">
+    <script>
+        function navigateToUserDetail(userId) {
+            window.location.href = '/user/' + userId;
+        }
+    </script>
 </head>
 <body class="bg-gray-100 min-h-screen">
 <header class="bg-black container mx-auto py-4 shadow-md">
@@ -27,9 +32,14 @@
             </thead>
             <tbody>
             @for(User user : users)
-                <tr class="border-b hover:bg-gray-100 transition duration-150 ease-in-out">
-                    <td class="py-2 px-4">${user.getUsername()}</td>
-                    <td class="py-2 px-4">${user.getRole()}</td>
+                <tr class="border-b hover:bg-gray-100 transition duration-150 ease-in-out cursor-pointer"
+                    onclick="navigateToUserDetail('${String.valueOf(user.getId())}')">
+                    <td class="py-2 px-4" style="cursor: pointer;">
+                        ${user.getUsername()}
+                    </td>
+                    <td class="py-2 px-4" style="cursor: pointer;">
+                        ${user.getRole()}
+                    </td>
                 </tr>
             @endfor
             </tbody>
@@ -38,4 +48,3 @@
 </main>
 </body>
 </html>
-
