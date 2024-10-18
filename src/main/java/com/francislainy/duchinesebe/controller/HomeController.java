@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -15,7 +17,7 @@ public class HomeController {
 
     private final UserServiceImpl userService;
 
-    @GetMapping({ "", "/"})
+    @GetMapping({"", "/"})
     public String login(Model model) {
         return "loginPage";
     }
@@ -25,5 +27,12 @@ public class HomeController {
         List<User> users = userService.getUsers();
         model.addAttribute("users", users);
         return "adminPage";
+    }
+
+    @GetMapping({"user/{userId}", "user/{userId}"})
+    public String getUserDetailPage(Model model, @PathVariable UUID userId) {
+        User user = userService.getUser(userId);
+        model.addAttribute("user", user);
+        return "userDetailPage";
     }
 }

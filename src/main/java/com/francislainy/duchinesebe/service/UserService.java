@@ -16,4 +16,5 @@ public interface UserService {
     void unreadLesson(UUID lessonId);
 
     List<User> getUsers();
+    User getUser(UUID userId);
 }

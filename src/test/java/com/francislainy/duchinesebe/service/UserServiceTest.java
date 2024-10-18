@@ -85,6 +85,34 @@ public class UserServiceTest {
     }
 
     @Test
+    void shouldGetUser() {
+        UUID userId = randomUUID();
+        UserEntity userEntity = UserEntity.builder().id(userId).username("anyUsername").role(UserType.USER.toString()).build();
+
+        when(userRepository.findById(any(UUID.class))).thenReturn(Optional.of(userEntity));
+
+        User actualUser = userService.getUser(userId);
+
+        assertAll(
+                () -> assertEquals(userEntity.getId(), actualUser.getId(), "User id should match"),
+                () -> assertEquals(userEntity.getUsername(), actualUser.getUsername(), "User username should match"),
+                () -> assertEquals(userEntity.getRole(), actualUser.getRole(), "User role should match")
+        );
+
+        verify(userRepository).findById(any(UUID.class));
+    }
+
+    @Test
+    void shouldNotGetUserWhenUserNotFound() {
+        UUID userId = randomUUID();
+        when(userRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> userService.getUser(userId));
+
+        verify(userRepository).findById(any(UUID.class));
+    }
+
+    @Test
     void shouldFavouriteLesson() {
         authenticateUser();
 

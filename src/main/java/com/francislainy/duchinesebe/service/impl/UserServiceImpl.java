@@ -90,4 +90,11 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsers() {
         return userRepository.findAll().stream().map(UserEntity::toModel).toList();
     }
+
+    @Override
+    public User getUser(UUID userId) {
+        return userRepository.findById(userId)
+                .map(UserEntity::toModel)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 }
