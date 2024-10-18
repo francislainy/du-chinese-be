@@ -48,6 +48,17 @@ public class UserControllerTest {
     }
 
     @Test
+    void shouldResetProgressForUser() throws Exception {
+        UUID userId = UUID.randomUUID();
+        doNothing().when(userService).resetProgressForUser(userId);
+
+        mockMvc.perform(post("/api/v1/users/reset-progress/{userId}", userId))
+                .andExpect(status().isNoContent());
+
+        verify(userService, times(1)).resetProgressForUser(userId);
+    }
+
+    @Test
     void shouldFavouriteALesson() throws Exception {
         UUID lessonId = UUID.randomUUID();
         doNothing().when(userService).favouriteLesson(lessonId);

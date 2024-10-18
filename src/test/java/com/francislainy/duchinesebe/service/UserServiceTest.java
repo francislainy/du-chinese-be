@@ -24,9 +24,11 @@ import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -290,7 +292,52 @@ public class UserServiceTest {
         verify(userRepository, never()).save(any(UserEntity.class));
     }
 
+    @Test
+    void shouldResetCurrentUserProgress() {
+        authenticateUser();
+
+        // Checking that user has favourited and read lessons before resetting
+        assertAll(
+                () -> assertFalse(userEntity.getFavouritedLessons().isEmpty(), "Favourited lessons should not be empty"),
+                () -> assertFalse(userEntity.getReadLessons().isEmpty(), "Read lessons should not be empty")
+        );
+
+        assertDoesNotThrow(() -> userService.resetCurrentUserProgress());
+
+        assertAll(
+                () -> assertEquals(0, userEntity.getFavouritedLessons().size(), "Favourited lessons should have 0 lesson"),
+                () -> assertEquals(0, userEntity.getReadLessons().size(), "Read lessons should have 0 lesson")
+        );
+
+        verify(userRepository, times(1)).save(any(UserEntity.class));
+    }
+
+    @Test
+    void shouldResetProgressForUser() {
+        createUser();
+
+        when(userRepository.findById(any(UUID.class))).thenReturn(Optional.of(userEntity));
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+
+        assertDoesNotThrow(() -> userService.resetProgressForUser(userEntity.getId()));
+
+        assertAll(
+                () -> assertEquals(0, userEntity.getFavouritedLessons().size(), "Favourited lessons should have 0 lesson"),
+                () -> assertEquals(0, userEntity.getReadLessons().size(), "Read lessons should have 0 lesson")
+        );
+
+        verify(userRepository, times(1)).save(any(UserEntity.class));
+    }
+
+    /**
+     * Helpers
+     */
     private void authenticateUser() {
+        createUser();
+        when(securityService.getCurrentUserEntity()).thenReturn(userEntity);
+    }
+
+    private void createUser() {
         UUID userId = randomUUID();
         UUID lessonId = randomUUID();
         lessonEntity = LessonEntity.builder().id(lessonId).build();
@@ -301,6 +348,5 @@ public class UserServiceTest {
                 .favouritedLessons(lessons)
                 .readLessons(lessons)
                 .build();
-        when(securityService.getCurrentUserEntity()).thenReturn(userEntity);
     }
 }

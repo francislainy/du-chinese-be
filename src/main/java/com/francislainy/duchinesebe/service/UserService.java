@@ -17,4 +17,8 @@ public interface UserService {
 
     List<User> getUsers();
     User getUser(UUID userId);
+
+    void resetCurrentUserProgress();
+
+    void resetProgressForUser(UUID userId);
 }

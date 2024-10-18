@@ -97,4 +97,25 @@ public class UserServiceImpl implements UserService {
                 .map(UserEntity::toModel)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
+
+    @Override
+    public void resetCurrentUserProgress() {
+        UserEntity userEntity = securityService.getCurrentUserEntity();
+
+        userEntity.getReadLessons().clear();
+        userEntity.getFavouritedLessons().clear();
+
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public void resetProgressForUser(UUID userId) {
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        userEntity.getReadLessons().clear();
+        userEntity.getFavouritedLessons().clear();
+
+        userRepository.save(userEntity);
+    }
 }

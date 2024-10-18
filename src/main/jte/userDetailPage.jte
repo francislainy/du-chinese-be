@@ -10,6 +10,21 @@
     <title>Home</title>
     <link rel="stylesheet" href="/main.css"/>
     <script src="http://localhost:35729/livereload.js"></script>
+    <script>
+        function resetProgress(userId) {
+            var url = '/api/v1/users/reset-progress/' +  userId;
+            fetch(url, {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    alert('User progress has been reset.');
+                    location.reload();
+                } else {
+                    alert('Failed to reset user progress.');
+                }
+            });
+        }
+    </script>
 </head>
 <body class="bg-gray-100 min-h-screen">
 <header class="bg-black container mx-auto py-4 shadow-md">
@@ -27,7 +42,7 @@
         <button
                 class="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-700"
                 onclick="changeUserRole('${user.getUsername()}')">
-            Change Role to ${user.getRole() == "Admin" ? "Basic User" : "Admin"}
+            Change Role to ${user.getRole().equals("Admin") ? "Basic User" : "Admin"}
         </button>
 
         <!-- Reset Password Button -->
@@ -40,13 +55,15 @@
         <h2 class="text-xl font-semibold mt-8 mb-4 text-red-600">Dangerous Section</h2>
         <div class="mt-8 pb-8">
             <!-- Reset Progress Button -->
+            <!-- Reset Progress Button -->
             <div style="display: block; width: fit-content;">
                 <button
                         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-green-700"
-                        onclick="resetUserProgress('${user.getUsername()}')">
+                        onclick="resetProgress('${String.valueOf(user.getId())}')">
                     Reset Progress
                 </button>
             </div>
+
             <!-- Delete Account Button -->
             <div style="display: block; width: fit-content; margin-top: 1rem;">
                 <button

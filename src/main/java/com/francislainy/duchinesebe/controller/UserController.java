@@ -24,6 +24,12 @@ public class UserController {
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 
+    @PostMapping("/reset-progress/{userId}")
+    public ResponseEntity<Void> resetProgressForUser(@PathVariable UUID userId) {
+        userService.resetProgressForUser(userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @PostMapping("/favourite/{lessonId}")
     public ResponseEntity<Void> favouriteLesson(@PathVariable UUID lessonId) {
         userService.favouriteLesson(lessonId);
