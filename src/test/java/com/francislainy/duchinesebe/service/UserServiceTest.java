@@ -329,6 +329,57 @@ public class UserServiceTest {
         verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
+    @Test
+    void shouldUpdateUserToAdmin() {
+        UUID userId = randomUUID();
+        UserEntity userEntity = UserEntity.builder().id(userId).username("anyUsername").role(UserType.USER.toString()).build();
+
+        when(userRepository.findById(any(UUID.class))).thenReturn(Optional.of(userEntity));
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+
+        assertDoesNotThrow(() -> userService.updateUserToAdmin(userId));
+
+        assertEquals(UserType.ADMIN.toString(), userEntity.getRole(), "User role should be updated to admin");
+
+        verify(userRepository, times(1)).save(any(UserEntity.class));
+    }
+
+    @Test
+    void shouldNotUpdateUserToAdminWhenUserNotFound() {
+        UUID userId = randomUUID();
+        when(userRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> userService.updateUserToAdmin(userId));
+
+        verify(userRepository, never()).save(any(UserEntity.class));
+    }
+
+    @Test
+    void shouldRevertUserFromAdmin() {
+        UUID userId = randomUUID();
+        UserEntity userEntity = UserEntity.builder().id(userId).username("anyUsername").role(UserType.ADMIN.toString()).build();
+
+        when(userRepository.findById(any(UUID.class))).thenReturn(Optional.of(userEntity));
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+
+        assertDoesNotThrow(() -> userService.revertUserFromAdmin(userId));
+
+        assertEquals(UserType.USER.toString(), userEntity.getRole(), "User role should be updated to user");
+
+        verify(userRepository, times(1)).save(any(UserEntity.class));
+    }
+
+    @Test
+    void shouldNotRevertUserFromAdminWhenUserNotFound() {
+        UUID userId = randomUUID();
+        when(userRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> userService.revertUserFromAdmin(userId));
+
+        verify(userRepository, never()).save(any(UserEntity.class));
+    }
+
+
     /**
      * Helpers
      */

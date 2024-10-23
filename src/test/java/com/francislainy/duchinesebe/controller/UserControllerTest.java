@@ -33,7 +33,7 @@ public class UserControllerTest {
     UserServiceImpl userService;
 
     @Test
-    void getUsers() throws Exception {
+    void shouldGetUsers() throws Exception {
         User user1 = User.builder().id(UUID.randomUUID()).build();
         User user2 = User.builder().id(UUID.randomUUID()).build();
         List<User> users = List.of(user1, user2);
@@ -56,6 +56,28 @@ public class UserControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(userService, times(1)).resetProgressForUser(userId);
+    }
+
+    @Test
+    void shouldUpdateUserToAdmin() throws Exception {
+        UUID userId = UUID.randomUUID();
+        doNothing().when(userService).updateUserToAdmin(userId);
+
+        mockMvc.perform(post("/api/v1/users/make-admin/{userId}", userId))
+                .andExpect(status().isNoContent());
+
+        verify(userService, times(1)).updateUserToAdmin(userId);
+    }
+
+    @Test
+    void shouldRevertUserFromAdmin() throws Exception {
+        UUID userId = UUID.randomUUID();
+        doNothing().when(userService).revertUserFromAdmin(userId);
+
+        mockMvc.perform(post("/api/v1/users/revert-admin/{userId}", userId))
+                .andExpect(status().isNoContent());
+
+        verify(userService, times(1)).revertUserFromAdmin(userId);
     }
 
     @Test

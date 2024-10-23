@@ -3,6 +3,7 @@ package com.francislainy.duchinesebe.service.impl;
 import com.francislainy.duchinesebe.config.security.SecurityService;
 import com.francislainy.duchinesebe.entity.LessonEntity;
 import com.francislainy.duchinesebe.entity.UserEntity;
+import com.francislainy.duchinesebe.enums.UserType;
 import com.francislainy.duchinesebe.model.User;
 import com.francislainy.duchinesebe.repository.LessonRepository;
 import com.francislainy.duchinesebe.repository.UserRepository;
@@ -115,6 +116,26 @@ public class UserServiceImpl implements UserService {
 
         userEntity.getReadLessons().clear();
         userEntity.getFavouritedLessons().clear();
+
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public void updateUserToAdmin(UUID userId) {
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        userEntity.setRole(UserType.ADMIN.toString());
+
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public void revertUserFromAdmin(UUID userId) {
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        userEntity.setRole(UserType.USER.toString());
 
         userRepository.save(userEntity);
     }

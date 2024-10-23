@@ -30,6 +30,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+
     @PostMapping("/favourite/{lessonId}")
     public ResponseEntity<Void> favouriteLesson(@PathVariable UUID lessonId) {
         userService.favouriteLesson(lessonId);
@@ -51,6 +52,18 @@ public class UserController {
     @PostMapping("/unread/{lessonId}")
     public ResponseEntity<Void> unreadLesson(@PathVariable UUID lessonId) {
         userService.unreadLesson(lessonId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/make-admin/{userId}")
+    public ResponseEntity<Void> updateUserToAdmin(@PathVariable UUID userId) {
+        userService.updateUserToAdmin(userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/revert-admin/{userId}")
+    public ResponseEntity<Void> revertUserFromAdmin(@PathVariable UUID userId) {
+        userService.revertUserFromAdmin(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

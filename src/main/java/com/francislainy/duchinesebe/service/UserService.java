@@ -19,6 +19,8 @@ public interface UserService {
     User getUser(UUID userId);
 
     void resetCurrentUserProgress();
-
     void resetProgressForUser(UUID userId);
+
+    void updateUserToAdmin(UUID userId);
+    void revertUserFromAdmin(UUID userId);
 }
